@@ -1,0 +1,39 @@
+{
+  "name": "workey",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "yarn lint:eslint && yarn lint:prettier",
+    "lint:eslint": "eslint .",
+    "lint:prettier": "prettier . --check",
+    "lintfix": "eslint . --fix && prettier --write --list-different ."
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "@nuxtjs/i18n": "^8.0.0",
+    "@pinia/nuxt": "^0.5.1",
+    "nuxt": "^3.11.2",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.27",
+    "vue-router": "^4.3.2"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^0.3.13",
+    "eslint": "^9.4.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.3.0",
+    "typescript": "^5.4.5",
+    "vite-plugin-vuetify": "^2.0.3",
+    "vuetify": "^3.6.8"
+  },
+  "volta": {
+    "node": "20.14.0",
+    "yarn": "4.2.2"
+  }
+}
