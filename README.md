@@ -73,7 +73,3 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-# Event_guider_V3
-# Event_guider_V3
-# Event_guider_V3
-# Event_guider_V3

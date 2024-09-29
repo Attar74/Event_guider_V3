@@ -1,14 +1,15 @@
-import withNuxt from './.nuxt/eslint.config.mjs'
+import { createConfigForNuxt } from '@nuxt/eslint-config/flat';
 
-export default withNuxt(
-  // your custom flat configs go here, for example:
-  // {
-  //   files: ['**/*.ts', '**/*.tsx'],
-  //   rules: {
-  //     'no-console': 'off' // allow console.log in TypeScript files
-  //   }
-  // },
-  // {
-  //   ...
-  // }
-)
+export default createConfigForNuxt({})
+  .prepend()
+  .override('nuxt/javascript', {
+    files: ['locales/*.js'],
+    rules: {
+      // 'sort-keys': 'warn',
+    },
+  })
+  .override('nuxt/typescript/rules', {
+    rules: {
+      'sort-imports': 'warn',
+    },
+  });
