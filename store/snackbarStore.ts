@@ -35,7 +35,6 @@ export const useSnackbarStore = defineStore('snackbar', {
   }),
   actions: {
     fireSnack(props: SnackbarProps) {
-
       this.snackbar.show = props?.show ?? this.snackbar?.show;
       this.snackbar.text = props?.text ?? this.snackbar?.text;
       this.snackbar.color = props?.color ?? this.snackbar?.color;
