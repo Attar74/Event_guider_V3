@@ -1,36 +1,34 @@
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
-
 export default defineNuxtConfig({
   devtools: { enabled: false },
   ssr: true,
+
   app: {
     head: {
-      title: 'Workey',
+      title: 'Event Guiders',
     },
   },
-  build: {
-    transpile: ['vuetify'],
-  },
+
   modules: [
     '@nuxtjs/i18n',
     '@nuxt/eslint',
     '@pinia/nuxt',
-    (_options, nuxt) => {
-      nuxt.hooks.hook('vite:extendConfig', config => {
-        config?.plugins?.push(vuetify({ autoImport: true }));
-      });
-    },
+    '@nuxtjs/tailwindcss',
   ],
+
   pinia: {
     storesDirs: ['./store/**'],
   },
-  vite: {
-    vue: {
-      template: {
-        transformAssetUrls,
-      },
+
+  css: ['public/assets/main.css'],
+  postcss: {
+    plugins: {
+      'postcss-import': {},
+      'tailwindcss/nesting': {},
+      tailwindcss: {},
+      autoprefixer: {},
     },
   },
+
   i18n: {
     langDir: 'locales/',
     lazy: true,
@@ -59,4 +57,6 @@ export default defineNuxtConfig({
       fallbackLocale: 'ar',
     },
   },
+
+  compatibilityDate: '2024-10-06',
 });
