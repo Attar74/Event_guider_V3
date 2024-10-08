@@ -40,7 +40,7 @@
         >
           Do you have an account ?
         </p>
-        <NuxtLink to="/">
+        <NuxtLink to="/en">
           <p
             class="text-[0.75rem] md:text-[0.875rem] text-[#FF3D9A] cursor-pointer font-semibold hover:underline leading-[1.5rem]"
           >
@@ -290,7 +290,7 @@ const checkFormVal = (key: string) => {
     case 'phoneNumber':
       return useMobileValidator(value)
     case 'password':
-      return usePasswordValidator(value)
+      return usePasswordValidator(value, 'register')
     case 'confirmPassword':
       return usePasswordConfirmation(
         value,

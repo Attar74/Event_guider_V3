@@ -1,6 +1,6 @@
 <template>
   <section class="h-screen flex bg-[#FDFDFD]">
-    <div class="container flex justify-center h-[90vh] m-auto">
+    <div class="container flex justify-center h-[90vh] m-auto w-auto">
       <div class="px-[1rem] xl:px-0 my-auto w-full md:w-auto md:flex">
         <!-- Left column container with background-->
         <div class="h-auto md:mb-0 md:w-1/3 xl:w-1/2 relative hidden md:block">

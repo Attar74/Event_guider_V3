@@ -24,7 +24,6 @@
         :class="classes"
         :placeholder="placeholder"
       />
-      <!-- v-on="$attrs" -->
       <button
         v-if="suffixIcon.length"
         class="absolute inset-y-0 right-[1.25rem] flex items-center pl-3.5"
@@ -35,7 +34,7 @@
     </div>
     <div
       v-if="error.length"
-      class="text-[#cc0000] mx-[1rem] text-[0.875rem] md:text-[1rem] my-[0.75rem]"
+      class="text-[#cc0000] mx-[1rem] text-[0.875rem] md:text-[1rem] my-[0.75rem] max-w-sm"
     >
       {{ error }}
     </div>
