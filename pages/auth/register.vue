@@ -200,7 +200,11 @@ const form = ref<Form>({
         'w-full outline-0 text-[0.875rem] md:text-[1rem] text-[#000] block h-[3rem] md:h-[3.5rem] p-2.5 dark:placeholder-[#AAACB9]',
       required: true,
       error: '',
-      options: []
+      options: [
+        { name: 'Option 1', value: 1 },
+        { name: 'Option 2', value: 2 },
+        { name: 'Option 3', value: 3 }
+      ]
     }
   },
   password: {
@@ -268,7 +272,6 @@ const validateForm = () => {
   if (!isCheckOn.value) {
     return
   }
-  // isRegisterationInProgress.value = true
   for (const key in form.value) {
     if (form.value?.[key]?.props?.required) {
       form.value[key].props.error = checkFormVal(key)
@@ -301,8 +304,20 @@ const checkFormVal = (key: string) => {
   }
 }
 
+const router = useRouter()
+const isValidForm = computed(() => {
+  return Object.values(form.value).every(({ props }) => !props?.error?.length)
+})
+
 const onSubmit = () => {
   isCheckOn.value = true
   validateForm()
+  if (isValidForm.value) {
+    isCheckOn.value = true
+    isRegisterationInProgress.value = true
+    setTimeout(() => {
+      router.push({ name: 'index___en' })
+    }, 2000)
+  }
 }
 </script>

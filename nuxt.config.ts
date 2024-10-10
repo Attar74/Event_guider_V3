@@ -4,8 +4,10 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'Event Guiders',
+      title: 'Event Guiders'
     },
+    pageTransition: { name: 'page', mode: 'out-in' },
+    layoutTransition: { name: 'layout', mode: 'out-in' }
   },
 
   modules: [
@@ -13,10 +15,22 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/google-fonts'
   ],
 
+  typescript: {
+    shim: false, // Enable or disable TypeScript shims
+    strict: true // Ensure strict typing
+  },
+
+  googleFonts: {
+    families: {
+      'Montserrat Alternates': []
+    }
+  },
+
   pinia: {
-    storesDirs: ['./store/**'],
+    storesDirs: ['./store/**']
   },
 
   css: ['public/assets/main.css'],
@@ -25,8 +39,8 @@ export default defineNuxtConfig({
       'postcss-import': {},
       'tailwindcss/nesting': {},
       tailwindcss: {},
-      autoprefixer: {},
-    },
+      autoprefixer: {}
+    }
   },
 
   i18n: {
@@ -38,15 +52,15 @@ export default defineNuxtConfig({
         name: 'English',
         iso: 'en-US',
         file: 'en.js',
-        dir: 'ltr',
+        dir: 'ltr'
       },
       {
         code: 'ar',
         name: 'العربية',
         iso: 'ar-EG',
         file: 'ar.js',
-        dir: 'rtl',
-      },
+        dir: 'rtl'
+      }
     ],
     defaultLocale: 'ar',
     strategy: 'prefix',
@@ -54,9 +68,9 @@ export default defineNuxtConfig({
       useCookie: true,
       cookieKey: 'i18n_redirected',
       redirectOn: 'root',
-      fallbackLocale: 'ar',
-    },
+      fallbackLocale: 'ar'
+    }
   },
 
-  compatibilityDate: '2024-10-06',
-});
+  compatibilityDate: '2024-10-06'
+})
