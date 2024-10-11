@@ -1,36 +1,48 @@
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
-
 export default defineNuxtConfig({
   devtools: { enabled: false },
   ssr: true,
+
   app: {
     head: {
-      title: 'Workey',
+      title: 'Event Guiders'
     },
+    pageTransition: { name: 'page', mode: 'out-in' },
+    layoutTransition: { name: 'layout', mode: 'out-in' }
   },
-  build: {
-    transpile: ['vuetify'],
-  },
+
   modules: [
     '@nuxtjs/i18n',
     '@nuxt/eslint',
     '@pinia/nuxt',
-    (_options, nuxt) => {
-      nuxt.hooks.hook('vite:extendConfig', config => {
-        config?.plugins?.push(vuetify({ autoImport: true }));
-      });
-    },
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/google-fonts'
   ],
+
+  typescript: {
+    shim: false, // Enable or disable TypeScript shims
+    strict: true // Ensure strict typing
+  },
+
+  googleFonts: {
+    families: {
+      'Montserrat Alternates': []
+    }
+  },
+
   pinia: {
-    storesDirs: ['./store/**'],
+    storesDirs: ['./store/**']
   },
-  vite: {
-    vue: {
-      template: {
-        transformAssetUrls,
-      },
-    },
+
+  css: ['public/assets/main.css'],
+  postcss: {
+    plugins: {
+      'postcss-import': {},
+      'tailwindcss/nesting': {},
+      tailwindcss: {},
+      autoprefixer: {}
+    }
   },
+
   i18n: {
     langDir: 'locales/',
     lazy: true,
@@ -40,15 +52,15 @@ export default defineNuxtConfig({
         name: 'English',
         iso: 'en-US',
         file: 'en.js',
-        dir: 'ltr',
+        dir: 'ltr'
       },
       {
         code: 'ar',
         name: 'العربية',
         iso: 'ar-EG',
         file: 'ar.js',
-        dir: 'rtl',
-      },
+        dir: 'rtl'
+      }
     ],
     defaultLocale: 'ar',
     strategy: 'prefix',
@@ -56,7 +68,20 @@ export default defineNuxtConfig({
       useCookie: true,
       cookieKey: 'i18n_redirected',
       redirectOn: 'root',
-      fallbackLocale: 'ar',
-    },
+      fallbackLocale: 'ar'
+    }
   },
-});
+
+  build: {
+    transpile: ['fast-deep-equal']
+  },
+
+  runtimeConfig: {
+    // Public keys that are exposed to the client-side
+    public: {
+      apiKey: process.env.GOOGLE_MAPS_API_KEY
+    }
+  },
+
+  compatibilityDate: '2024-10-06'
+})
