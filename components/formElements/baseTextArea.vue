@@ -9,27 +9,15 @@
       <span v-if="required">*</span>
     </label>
     <div class="relative">
-      <div
-        v-if="prefixIcon.length"
-        class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none"
-      >
-        <SVGIcon :icon="prefixIcon" />
-      </div>
-      <input
+      <textarea
         v-model="inputVal"
+        cols="10"
         :style="error && 'border:1px solid #e88080;'"
-        :type="type"
+        :rows="rows"
         :name="name"
         :class="classes"
         :placeholder="placeholder"
       />
-      <button
-        v-if="suffixIcon.length"
-        class="absolute inset-y-0 right-[1.25rem] flex items-center pl-3.5"
-        @click.stop.prevent="emits('suffixIconClick', name)"
-      >
-        <SVGIcon :icon="suffixIcon" />
-      </button>
     </div>
     <div
       v-if="error.length"
@@ -40,9 +28,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import SVGIcon from '~/helper/SVGIcon.vue'
 defineProps({
-  type: { type: String, default: 'text' },
+  rows: {
+    default: 5,
+    type: Number
+  },
   name: { type: String, default: '' },
   classes: { type: String, default: '' },
   label: {
@@ -60,19 +50,11 @@ defineProps({
   placeholder: {
     type: String,
     default: ''
-  },
-  prefixIcon: {
-    type: String,
-    default: ''
-  },
-  suffixIcon: {
-    type: String,
-    default: ''
   }
 })
 
 const inputVal = ref('')
-const emits = defineEmits(['updateInput', 'suffixIconClick'])
+const emits = defineEmits(['updateInput'])
 
 watch(inputVal, newValue => {
   emits('updateInput', newValue)

@@ -19,7 +19,7 @@ export default function usePasswordValidator(
         : ''
   }
   // Regex that checks for minimum eight characters, at least one letter, one number, and one special character
-  const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/
+  const passwordRegex: RegExp = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/
 
   return !password?.length
     ? 'The password is required'

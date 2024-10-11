@@ -3,20 +3,18 @@
     <div class="flex justify-between">
       <!--label-->
       <label
+        v-if="label"
         :for="name"
-        class="text-[#2A2F4F] text-[0.75rem] lg:text-[0.875rem] mb-[0.25rem] ml-[1rem] font-bold"
+        class="flex text-[#2A2F4F] text-[0.75rem] lg:text-[0.875rem] mb-[0.25rem] ml-[1rem] font-bold"
       >
-        {{ label }}
+        <p>{{ label }}</p>
         <span v-if="required">*</span>
       </label>
       <slot name="labelAction" />
     </div>
     <Multiselect
       v-model="inputVal"
-      :style="
-        error &&
-        'border:1px solid #e88080;border-radius:6px; border-radius:9999px'
-      "
+      :style="error && 'border:1px solid #e88080;'"
       :class="classes"
       :options="options"
       :placeholder="placeholder"

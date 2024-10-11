@@ -15,7 +15,7 @@
       <NuxtLink
         v-for="step in steps"
         :key="step.id"
-        :to="`/registeration-steps/step${step.id}`"
+        :to="`vendor/form/${step.route}`"
         class="col-span-1 flex flex-col"
       >
         <registerationCard :key="step.id" :data="step" />
@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { getSteps } from '~/constants/registerationSteps.ts'
+import { getSteps } from '~/constants/registerationSteps'
 import registerationCard from '~/components/cards/registerationCard.vue'
 
 const steps = getSteps()

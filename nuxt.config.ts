@@ -72,5 +72,16 @@ export default defineNuxtConfig({
     }
   },
 
+  build: {
+    transpile: ['fast-deep-equal']
+  },
+
+  runtimeConfig: {
+    // Public keys that are exposed to the client-side
+    public: {
+      apiKey: process.env.GOOGLE_MAPS_API_KEY
+    }
+  },
+
   compatibilityDate: '2024-10-06'
 })
