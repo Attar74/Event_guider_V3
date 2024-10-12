@@ -26,7 +26,7 @@
         </div>
 
         <div
-          class="w-full md:w-2/3 xl:w-1/2 shadow-2xl flex justify-center rounded-[2.5rem] px-[0.25rem] md:px-[5.438rem] md:rounded-l-none overflow-hidden py-[1.5rem]"
+          class="w-full md:w-2/3 xl:w-1/2 shadow-2xl flex justify-center rounded-[2.5rem] md:rounded-l-none overflow-hidden py-[1.5rem]"
         >
           <slot />
         </div>
@@ -36,17 +36,17 @@
 </template>
 
 <script setup lang="ts">
-import LoginImg from '@/public/assets/auth/loginImg.png'
-import rightArrow from '@/public/assets/auth/arrow.svg'
+import LoginImg from "@/public/assets/auth/loginImg.png";
+import rightArrow from "@/public/assets/auth/arrow.svg";
 
 // Define Routing - Router
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();
+const route = useRoute();
 
 // back routing
 const back = () => {
   router.push({
-    name: `${route.name !== 'index___en' ? 'index___en' : 'auth-register___en'}`
-  })
-}
+    name: `${route.name !== "index___en" ? "index___en" : "auth-register___en"}`,
+  });
+};
 </script>

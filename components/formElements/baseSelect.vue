@@ -38,7 +38,7 @@ import Multiselect from '@vueform/multiselect'
 import type { PropType } from 'vue'
 
 interface option {
-  value: number
+  value: string
   name: string
 }
 
@@ -94,12 +94,10 @@ watch(inputVal, newValue => {
 /* Overrides for Vue Multiselect */
 .multiselect {
   border-radius: 9999px;
-  border: 1px solid #d4d5dc;
 }
 
 .multiselect.is-open {
   border-radius: 9999px;
-  border: 1px solid #d4d5dc;
 }
 
 .multiselect.is-active {
@@ -108,8 +106,7 @@ watch(inputVal, newValue => {
 
 .multiselect.is-open:focus {
   border-radius: 9999px;
-  border: 1px solid #d4d5dc;
-  outline: #ff3d9a;
+  outline: transparent;
 }
 
 .multiselect-dropdown {
@@ -120,17 +117,18 @@ watch(inputVal, newValue => {
 
 /* Style individual option elements */
 .multiselect__option {
-  padding: 10px 20px;
+  padding: 14px 16px;
   cursor: pointer;
   color: #333;
-  background-color: #ff3d9a;
+  background-color: transparent;
 }
 
 .multiselect-option:hover {
   border-radius: 6px;
+  background-color: transparent;
 }
 
-.multiselect-option.is-selected {
+.multiselect-option.is-selected:not(.is-pointed) {
   background-color: #ff3d9a;
   border-radius: 6px;
 }
@@ -143,6 +141,14 @@ watch(inputVal, newValue => {
 /* Hover and highlight styles */
 .multiselect__option--highlight,
 .multiselect__option:hover {
-  background-color: #ff3d9a; /* Light grey background on hover or highlight */
+  background-color: transparent;
+}
+
+.multiselect-option.is-pointed:not(.is-selected) {
+  background-color: transparent;
+  color: #2a2f4f;
+}
+.multiselect-option.is-pointed:not(.is-selected):hover {
+  background-color: #ff3d9a0d;
 }
 </style>

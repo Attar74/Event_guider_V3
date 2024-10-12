@@ -79,7 +79,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Public keys that are exposed to the client-side
     public: {
-      apiKey: process.env.GOOGLE_MAPS_API_KEY
+      googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
+      apiBaseUrl: process.env.API_BASE_URL,
+      apiKey: process.env.NUXT_PUBLIC_API_KEY
     }
   },
 

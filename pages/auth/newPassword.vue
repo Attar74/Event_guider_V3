@@ -1,5 +1,5 @@
 <template>
-  <div class="my-[1.5rem] md:my-auto">
+  <div class="my-[1.5rem] md:my-auto px-[0.25rem] md:px-[4.5rem]">
     <div class="flex justify-center">
       <SVGIcon icon="openedLocker" />
     </div>

@@ -22,7 +22,7 @@
 import { ref } from 'vue'
 
 const config = useRuntimeConfig()
-const apiKey = config.public.apiKey
+const googleMapsApiKey = config.public.googleMapsApiKey
 const center = ref({ lat: 30.0444, lng: 31.2357 }) // Center the map on Cairo, Egypt
 const selectedLocation = ref<{ lat: number; lng: number } | null>(null)
 const address = ref('')
@@ -44,7 +44,7 @@ const getAddress = async () => {
     : { lat: 30.0444, lng: 31.2357 }
   try {
     const res = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latLng.lat},${latLng.lng}&key=${apiKey}`
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latLng.lat},${latLng.lng}&key=${googleMapsApiKey}`
     )
     console.log(res)
   } catch (error) {

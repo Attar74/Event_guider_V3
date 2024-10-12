@@ -1,6 +1,6 @@
 <template>
   <div
-    class="my-[1.5rem] md:my-auto overflow-scroll overflow-x-hidden h-[85vh] w-full"
+    class="px-[0.25rem] md:px-[4.5rem] my-[1.5rem] md:my-auto overflow-scroll overflow-x-hidden h-[85vh] w-full"
   >
     <div>
       <h1
@@ -66,7 +66,7 @@ definePageMeta({
 })
 
 interface option {
-  value: number
+  value: string
   name: string
 }
 interface FormField {
@@ -82,6 +82,7 @@ interface FormField {
     classes: string
     required: boolean
     error: string
+    options?: option[]
   }
 }
 
@@ -103,11 +104,13 @@ interface FormSelectFiled {
 }
 
 interface Form {
-  [key: string]: FormField | FormSelectFiled
+  [key: string]: FormSelectFiled | FormField
 }
 
+const config = useRuntimeConfig()
 const isRegisterationInProgress = ref(false)
 const isCheckOn = ref(false)
+
 const form = ref<Form>({
   tradeName: {
     componentType: 'baseInput',
@@ -182,9 +185,9 @@ const form = ref<Form>({
       required: true,
       error: '',
       options: [
-        { name: 'Option 1', value: 1 },
-        { name: 'Option 2', value: 2 },
-        { name: 'Option 3', value: 3 }
+        { value: '1', name: 'Hotel' },
+        { value: '2', name: 'Venue' },
+        { value: '3', name: 'Service' }
       ]
     }
   },
@@ -194,17 +197,13 @@ const form = ref<Form>({
     props: {
       loading: false,
       placeholder: 'Choose your sub-category',
-      label: 'Sub Category',
+      label: 'Sub-Category',
       name: 'subCategory',
       classes:
         'w-full outline-0 text-[0.875rem] md:text-[1rem] text-[#000] block h-[3rem] md:h-[3.5rem] p-2.5 dark:placeholder-[#AAACB9]',
-      required: true,
+      required: false,
       error: '',
-      options: [
-        { name: 'Option 1', value: 1 },
-        { name: 'Option 2', value: 2 },
-        { name: 'Option 3', value: 3 }
-      ]
+      options: []
     }
   },
   password: {
@@ -286,7 +285,7 @@ const validateForm = () => {
  */
 const checkFormVal = (key: string) => {
   let { value } = form.value?.[key]
-  value = value.toString()
+  value = value?.toString()
   switch (key) {
     case 'email':
       return useEmailValidator(value)
@@ -300,7 +299,7 @@ const checkFormVal = (key: string) => {
         form.value?.password?.value.toString()
       )
     default:
-      return !!value.length ? '' : `The ${key} is Required`
+      return !!value?.length ? '' : `The ${key} is Required`
   }
 }
 
@@ -320,4 +319,27 @@ const onSubmit = () => {
     }, 2000)
   }
 }
+
+interface Item {
+  uuid: string
+  displayName: string
+}
+
+interface ApiResponse {
+  data: Item[]
+}
+
+const setSubCategories = async () => {
+  const { data } = await useAPI<ApiResponse>(
+    `${config.public.apiBaseUrl}/account/sub-categories`
+  )
+  form.value.subCategory.props.options =
+    data.value?.data?.map((item: Item) => ({
+      value: item.uuid,
+      name: item.displayName
+    })) || []
+}
+setSubCategories()
+
+onMounted(async () => {})
 </script>

@@ -79,7 +79,7 @@ import baseInput from '../formElements/baseInput.vue'
 import baseSelect from '../formElements/baseSelect.vue'
 
 interface option {
-  value: number
+  value: string
   name: string
 }
 interface FormField {
@@ -133,9 +133,9 @@ const form = ref<Form>({
       required: true,
       error: '',
       options: [
-        { name: 'Cairo', value: 1 },
-        { name: 'Giza', value: 2 },
-        { name: 'Alex', value: 3 }
+        { name: 'Cairo', value: '1' },
+        { name: 'Giza', value: '2' },
+        { name: 'Alex', value: '3' }
       ]
     }
   },
