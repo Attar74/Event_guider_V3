@@ -124,6 +124,22 @@ const checkFormVal = (key: string) => {
   }
 }
 
+const sendOtp = async () => {
+  try {
+    await useAPI(`/account/forgot-password`, {
+      method: 'POST',
+      body: `"${form.value.email.value}"`
+    })
+    router.push({
+      name: 'auth-confirmCode___en',
+      query: { email: form.value.email.value }
+    })
+  } catch {
+  } finally {
+    isCheckInProgress.value = false
+  }
+}
+
 const router = useRouter()
 const isValidForm = computed(() => {
   return Object.values(form.value).every(({ props }) => !props?.error?.length)
@@ -134,9 +150,7 @@ const onSubmit = () => {
   validateForm()
   if (isValidForm.value) {
     isCheckInProgress.value = true
-    setTimeout(() => {
-      router.push({ name: 'auth-confirmCode___en' })
-    }, 2000)
+    sendOtp()
   }
 }
 </script>

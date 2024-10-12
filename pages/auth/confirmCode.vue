@@ -131,6 +131,33 @@ const checkFormVal = (key: string) => {
 }
 
 const router = useRouter()
+const route = useRoute()
+
+const validateOTP = async () => {
+  if (
+    route.query.email?.length &&
+    useEmailValidator(route.query.email.toString()).length
+  ) {
+    return
+  }
+  try {
+    await useAPI(`/account/validate-otp`, {
+      method: 'POST',
+      body: {
+        email: route.query.email,
+        otp: form.value.code.value
+      }
+    })
+    router.push({
+      name: 'auth-newPassword___en',
+      query: { email: route.query.email }
+    })
+  } catch {
+  } finally {
+    isCheckInProgress.value = false
+  }
+}
+
 const isValidForm = computed(() => {
   return Object.values(form.value).every(({ props }) => !props?.error?.length)
 })
@@ -140,9 +167,7 @@ const onSubmit = () => {
   validateForm()
   if (isValidForm.value) {
     isCheckInProgress.value = true
-    setTimeout(() => {
-      router.push({ name: 'index___en' })
-    }, 2000)
+    validateOTP()
   }
 }
 </script>

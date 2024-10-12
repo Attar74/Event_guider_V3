@@ -103,7 +103,7 @@ interface Form {
 }
 
 const form = ref<Form>({
-  email: {
+  username: {
     componentType: 'baseInput',
     value: '',
     props: {
@@ -170,12 +170,33 @@ const checkFormVal = (key: string) => {
   let { value } = form.value?.[key]
   value = value.toString()
   switch (key) {
-    case 'email':
+    case 'username':
       return useEmailValidator(value)
     case 'password':
       return usePasswordValidator(value, 'login')
     default:
       return ''
+  }
+}
+
+const formPayload = computed(() => {
+  const payload: Record<string, string | number> = {}
+  for (const key in form.value) {
+    payload[key] = form.value[key].value
+  }
+  return payload
+})
+
+const login = async () => {
+  try {
+    await useAPI(`/auth/authenticate`, {
+      method: 'POST',
+      body: formPayload.value
+    })
+    router.push({ name: 'vendor___en' })
+  } catch {
+  } finally {
+    loginBtnLoading.value = false
   }
 }
 
@@ -189,9 +210,7 @@ const onSubmit = () => {
   if (isValidForm.value) {
     isCheckOn.value = true
     loginBtnLoading.value = true
-    setTimeout(() => {
-      router.push({ name: 'vendor___en' })
-    }, 2000)
+    login()
   }
 }
 </script>
