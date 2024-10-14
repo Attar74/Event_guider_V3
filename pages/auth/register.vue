@@ -56,13 +56,15 @@
 import SVGIcon from '~/helper/SVGIcon.vue'
 import baseInput from '~/components/formElements/baseInput.vue'
 import baseSelect from '~/components/formElements/baseSelect.vue'
+import guest from '~/middleware/guest'
 import useEmailValidator from '~/composables/useEmailValidator'
 import useMobileValidator from '~/composables/useMobileValidator'
 import usePasswordConfirmation from '~/composables/usePasswordConfirmation'
 import usePasswordValidator from '~/composables/usePasswordValidator'
 
 definePageMeta({
-  layout: 'auth'
+  layout: 'auth',
+  middleware: guest
 })
 
 interface option {
@@ -327,12 +329,14 @@ const formPayload = computed(() => {
 
 const register = async () => {
   try {
-    await useAPI(`/account/vendors`, {
+    const { status } = await useAPI(`/account/vendors`, {
       method: 'POST',
       body: formPayload.value
     })
+    if (status.value === 'error') return
     router.push({ name: 'index___en' })
-  } catch {
+  } catch (error) {
+    console.log(error)
   } finally {
     isRegisterationInProgress.value = false
   }
@@ -348,12 +352,16 @@ interface ApiResponse {
 }
 
 const setSubCategories = async () => {
-  const { data } = await useAPI<ApiResponse>(`/account/sub-categories`)
-  form.value.subCategoryUuid.props.options =
-    data.value?.data?.map((item: Item) => ({
-      value: item.uuid,
-      name: item.displayName
-    })) || []
+  try {
+    const { data } = await useAPI<ApiResponse>(`/account/sub-categories`)
+    form.value.subCategoryUuid.props.options =
+      data.value?.data?.map((item: Item) => ({
+        value: item.uuid,
+        name: item.displayName
+      })) || []
+  } catch (error) {
+    console.log(error)
+  }
 }
 setSubCategories()
 </script>

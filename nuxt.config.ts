@@ -85,5 +85,9 @@ export default defineNuxtConfig({
     }
   },
 
+  devServer: {
+    port: 3001 // Change this to your desired port
+  },
+
   compatibilityDate: '2024-10-06'
 })

@@ -11,31 +11,16 @@
     >
       <div
         v-if="isMenuOpen"
+        :class="`w-[${width}]`"
         class="absolute mt-5 bg-white rounded-[1.5rem] shadow-lg z-10 p-2"
-        :class="`w-${width}`"
       >
-        <div
-          class="cursor-pointer items-center p-4 rounded-[1.5rem] text-sm leading-6 hover:bg-[#ff3d9a0d]"
-        >
-          <div class="w-[16.875rem]">
-            <div class="flex justify-between">
-              <button
-                class="gap-x-[0.5rem] font-semibold text-gray-900 text-[1rem] flex"
-              >
-                <SVGIcon icon="logout" />
-                Log out
-              </button>
-            </div>
-          </div>
-        </div>
+        <slot name="content" />
       </div>
     </transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import SVGIcon from '~/helper/SVGIcon.vue'
-
 const menuContainer = ref<HTMLElement | null>(null)
 
 defineProps({

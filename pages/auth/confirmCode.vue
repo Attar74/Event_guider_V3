@@ -51,9 +51,11 @@
 <script setup lang="ts">
 import SVGIcon from '~/helper/SVGIcon.vue'
 import baseInput from '~/components/formElements/baseInput.vue'
+import guest from '~/middleware/guest'
 
 definePageMeta({
-  layout: 'auth'
+  layout: 'auth',
+  middleware: guest
 })
 interface FormField {
   value: string | number
@@ -141,13 +143,14 @@ const validateOTP = async () => {
     return
   }
   try {
-    await useAPI(`/account/validate-otp`, {
+    const { status } = await useAPI(`/account/validate-otp`, {
       method: 'POST',
       body: {
         email: route.query.email,
         otp: form.value.code.value
       }
     })
+    if (status.value === 'error') return
     router.push({
       name: 'auth-newPassword___en',
       query: { email: route.query.email }

@@ -75,12 +75,18 @@
 
 <script setup lang="ts">
 import baseInput from '~/components/formElements/baseInput.vue'
+import guest from '~/middleware/guest'
 import useEmailValidator from '~/composables/useEmailValidator'
 import usePasswordValidator from '~/composables/usePasswordValidator'
+import { useUserStore } from '~/store/user'
 
 definePageMeta({
-  layout: 'auth'
+  layout: 'auth',
+  middleware: guest
 })
+
+// Initialize the user store
+const userStore = useUserStore()
 
 interface FormField {
   componentType: string
@@ -187,14 +193,63 @@ const formPayload = computed(() => {
   return payload
 })
 
+interface Venue {
+  addressCompleted: boolean
+  applicationStatus: string
+  businessInfoCompleted: boolean
+  dateCreated: string
+  email: string
+  mobileNumber: string
+  photos: string[]
+  photosCompleted: boolean
+  profileCompleted: boolean
+  rating: number
+  subCategoryDisplayName:
+    | 'Wedding Venue'
+    | 'Private Villa'
+    | 'Boat'
+    | 'Restaurant'
+    | ''
+  subCategoryUuid: string
+  tradeName: string
+  uuid: string
+}
+interface User {
+  dateCreated: string
+  dateLastLogin: string
+  mobileNumber: string
+  state: string
+  name: string
+  email: string
+  userType: string
+  username: string
+  uuid: string
+  venue: Venue
+}
+
+interface ApiResponse {
+  data: { accessToken: string; refreshToken: string; user: User }
+}
+
 const login = async () => {
   try {
-    await useAPI(`/auth/authenticate`, {
+    const { data, status } = await useAPI<ApiResponse>(`/auth/authenticate`, {
       method: 'POST',
       body: formPayload.value
     })
-    router.push({ name: 'vendor___en' })
-  } catch {
+    if (status.value === 'error') return
+
+    if (data && data.value) {
+      const { data: userData } = data.value
+      const { accessToken, refreshToken, user } = userData
+      if (userData) {
+        userStore.setUser(user)
+        userStore.setTokens({ accessToken, refreshToken })
+        router.push({ name: 'vendor___en' })
+      }
+    }
+  } catch (error) {
+    console.log(error)
   } finally {
     loginBtnLoading.value = false
   }
@@ -204,6 +259,7 @@ const router = useRouter()
 const isValidForm = computed(() => {
   return Object.values(form.value).every(({ props }) => !props?.error?.length)
 })
+
 const onSubmit = () => {
   isCheckOn.value = true
   validateForm()

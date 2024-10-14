@@ -80,7 +80,7 @@
                 <p
                   class="ml-1 text-[#2A2F4F] text-[0.875rem] font-bold leading-6"
                 >
-                  01157717459
+                  {{ mobileNumber }}
                 </p>
               </NuxtLink>
             </li>
@@ -117,6 +117,7 @@
                 </p>
                 <Menu
                   :is-menu-open="isMenuOpen"
+                  width="16.875rem"
                   @close-menu="isMenuOpen = false"
                 >
                   <template #trigger>
@@ -125,7 +126,7 @@
                       @click="isMenuOpen = !isMenuOpen"
                     >
                       <p class="text-[#000] text-[0.875rem] font-semibold">
-                        Mahmod Attar
+                        {{ userName }}
                       </p>
                       <SVGIcon
                         icon="chevronDown"
@@ -133,6 +134,16 @@
                         :class="{ 'rotate-180': isMenuOpen }"
                       />
                     </buton>
+                  </template>
+
+                  <template #content>
+                    <button
+                      class="w-full flex justify-start gap-x-[0.5rem] font-semibold text-gray-900 text-[1rem] cursor-pointer items-center p-4 rounded-[1.5rem] text-sm leading-6 hover:bg-[#ff3d9a0d]"
+                      @click="handleLogout"
+                    >
+                      <SVGIcon icon="logout" />
+                      Log out
+                    </button>
                   </template>
                 </Menu>
               </div>
@@ -148,8 +159,17 @@
 import Menu from '~/components/ui/menu.vue'
 import SVGIcon from '~/helper/SVGIcon.vue'
 
+const userStore = useUserStore()
+
+const userName = computed(() => userStore.user.username)
+const mobileNumber = computed(() => userStore.user.mobileNumber)
 const isMenuOpen = ref(false)
 const switchBtn = ref(false)
 const mobileMenuOpen = ref(false)
 const isDrawer = ref(false)
+
+const handleLogout = () => {
+  userStore.clearUser()
+  navigateTo('/')
+}
 </script>

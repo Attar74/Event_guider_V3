@@ -40,9 +40,11 @@
 <script setup lang="ts">
 import SVGIcon from '~/helper/SVGIcon.vue'
 import baseInput from '~/components/formElements/baseInput.vue'
+import guest from '~/middleware/guest'
 
 definePageMeta({
-  layout: 'auth'
+  layout: 'auth',
+  middleware: guest
 })
 interface FormField {
   value: string | number
@@ -155,10 +157,11 @@ const formPayload = computed(() => {
 
 const setNewPassword = async () => {
   try {
-    await useAPI(`/account/forgot-password`, {
+    const { status } = await useAPI(`/account/forgot-password`, {
       method: 'POST',
       body: { ...formPayload.value, email: route.query.email }
     })
+    if (status.value === 'error') return
     router.push({
       name: 'index___en'
     })

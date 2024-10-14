@@ -10,6 +10,13 @@
 
 <script setup lang="ts">
 const { locale } = useI18n()
+// Initialize the user store
+const userStore = useUserStore()
+
+// Load tokens from localStorage when the app starts
+onBeforeMount(() => {
+  userStore.loadTokensFromLocalStorage()
+})
 </script>
 <style>
 .page-enter-active,
