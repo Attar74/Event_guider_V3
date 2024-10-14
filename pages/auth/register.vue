@@ -61,6 +61,7 @@ import useEmailValidator from '~/composables/useEmailValidator'
 import useMobileValidator from '~/composables/useMobileValidator'
 import usePasswordConfirmation from '~/composables/usePasswordConfirmation'
 import usePasswordValidator from '~/composables/usePasswordValidator'
+import { useSnackbarStore } from '~/store/snackbarStore'
 
 definePageMeta({
   layout: 'auth',
@@ -111,6 +112,7 @@ interface Form {
 
 const isRegisterationInProgress = ref(false)
 const isCheckOn = ref(false)
+const snackbarStore = useSnackbarStore()
 
 const form = ref<Form>({
   tradeName: {
@@ -333,7 +335,14 @@ const register = async () => {
       method: 'POST',
       body: formPayload.value
     })
-    if (status.value === 'error') return
+    if (status.value === 'error') {
+      snackbarStore.fireSnack({
+        isVisible: true,
+        text: 'Email already exists',
+        type: 'error'
+      })
+      return
+    }
     router.push({ name: 'index___en' })
   } catch (error) {
     console.log(error)

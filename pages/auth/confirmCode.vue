@@ -52,6 +52,7 @@
 import SVGIcon from '~/helper/SVGIcon.vue'
 import baseInput from '~/components/formElements/baseInput.vue'
 import guest from '~/middleware/guest'
+import { useSnackbarStore } from '~/store/snackbarStore'
 
 definePageMeta({
   layout: 'auth',
@@ -76,6 +77,7 @@ interface Form {
 
 const isCheckInProgress = ref(false)
 const isCheckOn = ref(false)
+const snackbarStore = useSnackbarStore()
 
 const form = ref<Form>({
   code: {
@@ -150,7 +152,14 @@ const validateOTP = async () => {
         otp: form.value.code.value
       }
     })
-    if (status.value === 'error') return
+    if (status.value === 'error') {
+      snackbarStore.fireSnack({
+        isVisible: true,
+        text: 'Invalid OTP',
+        type: 'error'
+      })
+      return
+    }
     router.push({
       name: 'auth-newPassword___en',
       query: { email: route.query.email }

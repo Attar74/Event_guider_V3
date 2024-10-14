@@ -22,6 +22,7 @@
         :name="name"
         :class="classes"
         :placeholder="placeholder"
+        :disabled="disabled"
       />
       <button
         v-if="suffixIcon.length"
@@ -45,6 +46,10 @@ defineProps({
   type: { type: String, default: 'text' },
   name: { type: String, default: '' },
   classes: { type: String, default: '' },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
   label: {
     type: String,
     default: ''

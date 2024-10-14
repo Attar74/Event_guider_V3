@@ -1,47 +1,45 @@
-type Anchor = 'top' | 'bottom' | 'left' | 'right';
-type Variant = 'flat' | 'text' | 'elevated' | 'tonal' | 'outlined' | 'plain';
+type Anchor = 'top' | 'bottom' | 'left' | 'right'
 
 interface SnackbarState {
-  show: boolean;
-  text: string;
-  color: string;
-  location: Anchor;
-  multiLine: boolean;
-  timeout: number;
-  variant: Variant;
+  isVisible: boolean
+  text: string
+  type: string
+  location: Anchor
+  timeout: number
 }
 
 interface SnackbarProps {
-  show?: boolean;
-  text?: string;
-  color?: string;
-  location?: Anchor;
-  multiLine?: boolean;
-  timeout?: number;
-  variant?: Variant;
+  isVisible?: boolean
+  text?: string
+  type?: string
+  location?: Anchor
+  timeout?: number
 }
 
 export const useSnackbarStore = defineStore('snackbar', {
-  state: (): { snackbar: SnackbarState } => ({
+  state: () => ({
     snackbar: {
-      show: false,
+      isVisible: false,
       text: '',
-      color: 'success',
+      type: 'success',
       location: 'bottom',
-      multiLine: false,
-      timeout: 5000,
-      variant: 'elevated',
-    },
+      timeout: 4000
+    } as SnackbarState
   }),
   actions: {
     fireSnack(props: SnackbarProps) {
-      this.snackbar.show = props?.show ?? this.snackbar?.show;
-      this.snackbar.text = props?.text ?? this.snackbar?.text;
-      this.snackbar.color = props?.color ?? this.snackbar?.color;
-      this.snackbar.location = props?.location ?? this.snackbar?.location;
-      this.snackbar.multiLine = props?.multiLine ?? this.snackbar?.multiLine;
-      this.snackbar.timeout = props?.timeout ?? this.snackbar?.timeout;
-      this.snackbar.variant = props?.variant ?? this.snackbar?.variant;
+      this.snackbar.isVisible = props?.isVisible ?? this.snackbar?.isVisible
+      this.snackbar.text = props?.text ?? this.snackbar?.text
+      this.snackbar.type = props?.type ?? this.snackbar?.type
+      this.snackbar.location = props?.location ?? this.snackbar?.location
+      this.snackbar.timeout = props?.timeout ?? this.snackbar?.timeout
+
+      setTimeout(() => {
+        this.snackbar.isVisible = false
+      }, this.snackbar.timeout)
     },
-  },
-});
+    closeSnackbar() {
+      this.snackbar.isVisible = false
+    }
+  }
+})
