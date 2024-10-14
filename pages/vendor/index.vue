@@ -18,7 +18,13 @@
         :to="`vendor/form/${step.route}`"
         class="col-span-1 flex flex-col"
       >
-        <registerationCard :key="step.id" :data="step" />
+        <registerationCard
+          :key="step.id"
+          :data="step"
+          :status="
+            (user?.venue as Record<string, any>)?.[`${step.key}Completed`]
+          "
+        />
       </NuxtLink>
     </div>
     <div class="text-center xl:px-[25rem]">
@@ -38,7 +44,10 @@
 <script setup lang="ts">
 import { getSteps } from '~/constants/registerationSteps'
 import registerationCard from '~/components/cards/registerationCard.vue'
+import { useUserStore } from '~/store/user'
 
+const userStore = useUserStore()
+const { user } = userStore
 const steps = getSteps()
 
 definePageMeta({
