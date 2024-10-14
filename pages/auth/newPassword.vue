@@ -30,7 +30,7 @@
         type="submit"
         class="w-full font-bold mt-[0.5rem] md:mt-[2rem] mx-auto text-white bg-[#FF3D9A] hover:bg-[#e8388c] focus:outline-none leading-7 rounded-full text-[0.875rem] md:text-[1rem] py-[0.6rem] md:py-[0.875rem] text-center dark:bg-[#FF3D9A] dark:focus:ring-red-900"
       >
-        <p v-if="!isCheckInProgress" class="mx-3">Get Code</p>
+        <p v-if="!isCheckInProgress" class="mx-3">Reset Password</p>
         <SVGIcon v-else icon="circularLoader" />
       </button>
     </form>
@@ -40,9 +40,11 @@
 <script setup lang="ts">
 import SVGIcon from '~/helper/SVGIcon.vue'
 import baseInput from '~/components/formElements/baseInput.vue'
+import guest from '~/middleware/guest'
 
 definePageMeta({
-  layout: 'auth'
+  layout: 'auth',
+  middleware: guest
 })
 interface FormField {
   value: string | number
@@ -66,7 +68,7 @@ const isCheckInProgress = ref(false)
 const isCheckOn = ref(false)
 
 const form = ref<Form>({
-  password: {
+  newPassword: {
     value: '',
     props: {
       type: 'password',
@@ -81,7 +83,7 @@ const form = ref<Form>({
       error: ''
     }
   },
-  confirmPassword: {
+  confirmNewPassword: {
     value: '',
     props: {
       type: 'password',
@@ -130,12 +132,12 @@ const checkFormVal = (key: string) => {
   let { value } = form.value?.[key]
   value = value.toString()
   switch (key) {
-    case 'password':
+    case 'newPassword':
       return usePasswordValidator(value, 'register')
-    case 'confirmPassword':
+    case 'confirmNewPassword':
       return usePasswordConfirmation(
         value,
-        form.value?.password?.value.toString()
+        form.value?.newPassword?.value.toString()
       )
     default:
       return ''
@@ -143,6 +145,32 @@ const checkFormVal = (key: string) => {
 }
 
 const router = useRouter()
+const route = useRoute()
+
+const formPayload = computed(() => {
+  const payload: Record<string, string | number> = {}
+  for (const key in form.value) {
+    payload[key] = form.value[key].value
+  }
+  return payload
+})
+
+const setNewPassword = async () => {
+  try {
+    const { status } = await useAPI(`/account/forgot-password`, {
+      method: 'POST',
+      body: { ...formPayload.value, email: route.query.email }
+    })
+    if (status.value === 'error') return
+    router.push({
+      name: 'index___en'
+    })
+  } catch {
+  } finally {
+    isCheckInProgress.value = false
+  }
+}
+
 const isValidForm = computed(() => {
   return Object.values(form.value).every(({ props }) => !props?.error?.length)
 })
@@ -151,9 +179,7 @@ const onSubmit = () => {
   validateForm()
   if (isValidForm.value) {
     isCheckOn.value = true
-    setTimeout(() => {
-      router.push({ name: 'auth-confirmCode___en' })
-    }, 2000)
+    setNewPassword()
   }
 }
 </script>

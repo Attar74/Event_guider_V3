@@ -56,13 +56,15 @@
 import SVGIcon from '~/helper/SVGIcon.vue'
 import baseInput from '~/components/formElements/baseInput.vue'
 import baseSelect from '~/components/formElements/baseSelect.vue'
+import guest from '~/middleware/guest'
 import useEmailValidator from '~/composables/useEmailValidator'
 import useMobileValidator from '~/composables/useMobileValidator'
 import usePasswordConfirmation from '~/composables/usePasswordConfirmation'
 import usePasswordValidator from '~/composables/usePasswordValidator'
 
 definePageMeta({
-  layout: 'auth'
+  layout: 'auth',
+  middleware: guest
 })
 
 interface option {
@@ -107,7 +109,6 @@ interface Form {
   [key: string]: FormSelectFiled | FormField
 }
 
-const config = useRuntimeConfig()
 const isRegisterationInProgress = ref(false)
 const isCheckOn = ref(false)
 
@@ -127,7 +128,7 @@ const form = ref<Form>({
       error: ''
     }
   },
-  name: {
+  Username: {
     componentType: 'baseInput',
     value: '',
     props: {
@@ -157,7 +158,7 @@ const form = ref<Form>({
       error: ''
     }
   },
-  phoneNumber: {
+  MobileNumber: {
     componentType: 'baseInput',
     value: '',
     props: {
@@ -185,23 +186,23 @@ const form = ref<Form>({
       required: true,
       error: '',
       options: [
-        { value: '1', name: 'Hotel' },
-        { value: '2', name: 'Venue' },
-        { value: '3', name: 'Service' }
+        { value: 'Hotel', name: 'Hotel' },
+        { value: 'Venue', name: 'Venue' },
+        { value: 'Service', name: 'Service' }
       ]
     }
   },
-  subCategory: {
+  subCategoryUuid: {
     componentType: 'baseSelect',
     value: '',
     props: {
       loading: false,
       placeholder: 'Choose your sub-category',
       label: 'Sub-Category',
-      name: 'subCategory',
+      name: 'subCategoryUuid',
       classes:
         'w-full outline-0 text-[0.875rem] md:text-[1rem] text-[#000] block h-[3rem] md:h-[3.5rem] p-2.5 dark:placeholder-[#AAACB9]',
-      required: false,
+      required: true,
       error: '',
       options: []
     }
@@ -289,7 +290,7 @@ const checkFormVal = (key: string) => {
   switch (key) {
     case 'email':
       return useEmailValidator(value)
-    case 'phoneNumber':
+    case 'MobileNumber':
       return useMobileValidator(value)
     case 'password':
       return usePasswordValidator(value, 'register')
@@ -314,9 +315,30 @@ const onSubmit = () => {
   if (isValidForm.value) {
     isCheckOn.value = true
     isRegisterationInProgress.value = true
-    setTimeout(() => {
-      router.push({ name: 'index___en' })
-    }, 2000)
+    register()
+  }
+}
+
+const formPayload = computed(() => {
+  const payload: Record<string, string | number> = {}
+  for (const key in form.value) {
+    payload[key] = form.value[key].value
+  }
+  return payload
+})
+
+const register = async () => {
+  try {
+    const { status } = await useAPI(`/account/vendors`, {
+      method: 'POST',
+      body: formPayload.value
+    })
+    if (status.value === 'error') return
+    router.push({ name: 'index___en' })
+  } catch (error) {
+    console.log(error)
+  } finally {
+    isRegisterationInProgress.value = false
   }
 }
 
@@ -330,16 +352,16 @@ interface ApiResponse {
 }
 
 const setSubCategories = async () => {
-  const { data } = await useAPI<ApiResponse>(
-    `${config.public.apiBaseUrl}/account/sub-categories`
-  )
-  form.value.subCategory.props.options =
-    data.value?.data?.map((item: Item) => ({
-      value: item.uuid,
-      name: item.displayName
-    })) || []
+  try {
+    const { data } = await useAPI<ApiResponse>(`/account/sub-categories`)
+    form.value.subCategoryUuid.props.options =
+      data.value?.data?.map((item: Item) => ({
+        value: item.uuid,
+        name: item.displayName
+      })) || []
+  } catch (error) {
+    console.log(error)
+  }
 }
 setSubCategories()
-
-onMounted(async () => {})
 </script>

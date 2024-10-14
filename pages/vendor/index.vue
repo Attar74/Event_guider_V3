@@ -42,6 +42,7 @@ import registerationCard from '~/components/cards/registerationCard.vue'
 const steps = getSteps()
 
 definePageMeta({
-  layout: 'vendor'
+  layout: 'vendor',
+  requiresAuth: true
 })
 </script>

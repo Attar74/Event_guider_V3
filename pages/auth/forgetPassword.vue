@@ -41,10 +41,12 @@
 <script setup lang="ts">
 import SVGIcon from '~/helper/SVGIcon.vue'
 import baseInput from '~/components/formElements/baseInput.vue'
+import guest from '~/middleware/guest'
 import useEmailValidator from '~/composables/useEmailValidator'
 
 definePageMeta({
-  layout: 'auth'
+  layout: 'auth',
+  middleware: guest
 })
 interface FormField {
   componentType: string
@@ -124,6 +126,23 @@ const checkFormVal = (key: string) => {
   }
 }
 
+const sendOtp = async () => {
+  try {
+    const { status } = await useAPI(`/account/forgot-password`, {
+      method: 'POST',
+      body: `"${form.value.email.value}"`
+    })
+    if (status.value === 'error') return
+    router.push({
+      name: 'auth-confirmCode___en',
+      query: { email: form.value.email.value }
+    })
+  } catch {
+  } finally {
+    isCheckInProgress.value = false
+  }
+}
+
 const router = useRouter()
 const isValidForm = computed(() => {
   return Object.values(form.value).every(({ props }) => !props?.error?.length)
@@ -134,9 +153,7 @@ const onSubmit = () => {
   validateForm()
   if (isValidForm.value) {
     isCheckInProgress.value = true
-    setTimeout(() => {
-      router.push({ name: 'auth-confirmCode___en' })
-    }, 2000)
+    sendOtp()
   }
 }
 </script>
