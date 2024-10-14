@@ -29,7 +29,7 @@ defineProps({
     type: Boolean
   },
   width: {
-    default: '64',
+    default: '[64rem]',
     type: String
   }
 })
