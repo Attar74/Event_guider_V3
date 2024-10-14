@@ -41,6 +41,7 @@
 import SVGIcon from '~/helper/SVGIcon.vue'
 import baseInput from '~/components/formElements/baseInput.vue'
 import guest from '~/middleware/guest'
+import { useSnackbarStore } from '~/store/snackbarStore'
 
 definePageMeta({
   layout: 'auth',
@@ -66,6 +67,7 @@ interface Form {
 
 const isCheckInProgress = ref(false)
 const isCheckOn = ref(false)
+const snackbarStore = useSnackbarStore()
 
 const form = ref<Form>({
   newPassword: {
@@ -161,7 +163,14 @@ const setNewPassword = async () => {
       method: 'POST',
       body: { ...formPayload.value, email: route.query.email }
     })
-    if (status.value === 'error') return
+    if (status.value === 'error') {
+      snackbarStore.fireSnack({
+        isVisible: true,
+        text: 'Smoething went wrong',
+        type: 'error'
+      })
+      return
+    }
     router.push({
       name: 'index___en'
     })

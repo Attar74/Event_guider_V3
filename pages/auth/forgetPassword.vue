@@ -43,6 +43,7 @@ import SVGIcon from '~/helper/SVGIcon.vue'
 import baseInput from '~/components/formElements/baseInput.vue'
 import guest from '~/middleware/guest'
 import useEmailValidator from '~/composables/useEmailValidator'
+import { useSnackbarStore } from '~/store/snackbarStore'
 
 definePageMeta({
   layout: 'auth',
@@ -68,6 +69,7 @@ interface Form {
 
 const isCheckInProgress = ref(false)
 const isCheckOn = ref(false)
+const snackbarStore = useSnackbarStore()
 
 const form = ref<Form>({
   email: {
@@ -132,7 +134,14 @@ const sendOtp = async () => {
       method: 'POST',
       body: `"${form.value.email.value}"`
     })
-    if (status.value === 'error') return
+    if (status.value === 'error') {
+      snackbarStore.fireSnack({
+        isVisible: true,
+        text: 'User cannot be found',
+        type: 'error'
+      })
+      return
+    }
     router.push({
       name: 'auth-confirmCode___en',
       query: { email: form.value.email.value }

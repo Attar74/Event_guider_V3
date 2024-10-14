@@ -12,19 +12,27 @@
         Please , enter your credentials below to be login
       </p>
     </div>
+
     <form class="mt-[2rem]" @submit.prevent="onSubmit">
       <div class="flex justify-center">
         <div class="mx-auto w-full">
           <div v-for="(value, key) in form" :key="key">
             <baseInput
               v-bind="value.props"
+              :disabled="loginBtnLoading"
               @update-input="value.value = $event"
             />
           </div>
         </div>
       </div>
       <div class="flex justify-end">
-        <NuxtLink :to="{ name: 'auth-forgetPassword___en' }">
+        <NuxtLink
+          :to="{ name: 'auth-forgetPassword___en' }"
+          :class="{
+            'text-gray-400  pointer-events-none cursor-not-allowed':
+              loginBtnLoading
+          }"
+        >
           <p
             class="text-[0.75rem] md:text-[0.875rem] text-[#FF3D9A] cursor-pointer mt-[0.5rem] md:font-semibold hover:underline leading-[1.5rem]"
           >
@@ -34,6 +42,7 @@
       </div>
       <button
         type="submit"
+        :disabled="loginBtnLoading"
         class="w-full font-bold mt-[0.5rem] md:mt-[2rem] mx-auto text-white bg-[#FF3D9A] hover:bg-[#e8388c] focus:outline-none leading-7 rounded-full text-[0.875rem] md:text-[1rem] py-[0.6rem] md:py-[0.875rem] text-center dark:bg-[#FF3D9A] dark:focus:ring-red-900"
       >
         <p v-if="!loginBtnLoading" class="mx-3">Log In</p>
@@ -61,7 +70,13 @@
         >
           Don’t have an account ?
         </p>
-        <NuxtLink to="/en/auth/register">
+        <NuxtLink
+          to="/en/auth/register"
+          :class="{
+            'text-gray-400  pointer-events-none cursor-not-allowed':
+              loginBtnLoading
+          }"
+        >
           <p
             class="text-[0.75rem] md:text-[0.875rem] text-[#FF3D9A] cursor-pointer font-semibold hover:underline leading-[1.5rem]"
           >
@@ -78,6 +93,7 @@ import baseInput from '~/components/formElements/baseInput.vue'
 import guest from '~/middleware/guest'
 import useEmailValidator from '~/composables/useEmailValidator'
 import usePasswordValidator from '~/composables/usePasswordValidator'
+import { useSnackbarStore } from '~/store/snackbarStore'
 import { useUserStore } from '~/store/user'
 
 definePageMeta({
@@ -87,6 +103,7 @@ definePageMeta({
 
 // Initialize the user store
 const userStore = useUserStore()
+const snackbarStore = useSnackbarStore()
 
 interface FormField {
   componentType: string
@@ -237,7 +254,17 @@ const login = async () => {
       method: 'POST',
       body: formPayload.value
     })
-    if (status.value === 'error') return
+
+    console.log(data)
+
+    if (status.value === 'error') {
+      snackbarStore.fireSnack({
+        isVisible: true,
+        text: 'Invalid Credntials',
+        type: 'error'
+      })
+      return
+    }
 
     if (data && data.value) {
       const { data: userData } = data.value
