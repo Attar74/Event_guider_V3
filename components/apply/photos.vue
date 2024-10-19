@@ -90,8 +90,7 @@
           </button>
         </NuxtLink>
         <button
-          class="rounded-[2rem] bg-[#FF3D9A] w-[11.25rem] border-[0.063rem] border-[#FF3D9A] h-[3.5rem] cursor-pointer disabled:border-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[#AAACB9]"
-          :disabled="isSaveBtnDisabled"
+          class="rounded-[2rem] bg-[#FF3D9A] w-[11.25rem] border-[0.063rem] border-[#FF3D9A] h-[3.5rem] cursor-pointer disabled:border-0"
           @click="uploadPhotos"
         >
           <SVGIcon
@@ -99,7 +98,9 @@
             icon="circularLoader"
             class="my-auto"
           />
-          <p v-else class="text-[#fff] text[1rem] leading-7 font-bold">Save</p>
+          <p v-else class="text-[#fff] text[1rem] leading-7 font-bold">
+            Save & continue
+          </p>
         </button>
       </div>
     </div>
@@ -124,7 +125,15 @@ const saveBtnLoading = ref(false)
 
 const handleFileChange = async (event: Event) => {
   const target = event.target as HTMLInputElement
-  const files = target.files
+  const files = target.files ?? []
+  if (files?.length + images.value.length > 8) {
+    snackbarStore.fireSnack({
+      isVisible: true,
+      text: 'Max 8 photos allowed',
+      type: 'error'
+    })
+    return
+  }
   if (files?.length) {
     for (const key in files) {
       if (files[key] instanceof File) {
@@ -145,9 +154,6 @@ const handleFileChange = async (event: Event) => {
 }
 
 const config = useRuntimeConfig()
-const isSaveBtnDisabled = computed(() => {
-  return images.value.every((item: imageItem) => !item.hasOwnProperty('isBlob'))
-})
 
 const handleOpenFileInput = () => {
   if (fileInput.value) fileInput.value.click()
@@ -158,6 +164,15 @@ interface ApiResponse {
 
 const uploadPhotos = async () => {
   saveBtnLoading.value = true
+  if (images.value.length < 6) {
+    snackbarStore.fireSnack({
+      isVisible: true,
+      text: 'Add at least 6 photos',
+      type: 'error'
+    })
+    saveBtnLoading.value = false
+    return
+  }
   const formData = new FormData()
 
   // Append each file to the FormData object
@@ -186,6 +201,7 @@ const uploadPhotos = async () => {
       text: `${imagesToBeSend.value.length} image(s) uploaded successfully!`,
       type: 'success'
     })
+    navigateTo({ name: 'vendor-form-reviewing___en' })
   } catch {
   } finally {
     imagesToBeSend.value = []

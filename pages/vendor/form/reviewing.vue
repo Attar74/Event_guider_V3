@@ -56,8 +56,11 @@ import {
   differenceInSeconds
 } from 'date-fns'
 import SVGIcon from '~/helper/SVGIcon.vue'
-
 import { useUserStore } from '~/store/user'
+
+definePageMeta({
+  layout: 'vendor'
+})
 
 const userStore = useUserStore()
 const { user } = userStore
@@ -96,7 +99,7 @@ const updateTimeLeft = () => {
   const secondsBetween =
     differenceInSeconds(add(profileCompletedAt, { days: 4 }), now) % 60
 
-  if (!secondsBetween) {
+  if (!secondsBetween && !minutsBetween && !hoursBetween && !daysBetween) {
     timeLeft.value = {
       daysBetween: 0,
       hoursBetween: 0,

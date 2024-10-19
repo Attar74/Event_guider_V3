@@ -22,6 +22,7 @@
             <baseInput
               v-bind="value.props"
               @update-input="value.value = $event"
+              @suffix-icon-click="suffixIconClicked"
             />
           </div>
         </div>
@@ -76,7 +77,7 @@ const form = ref<Form>({
       type: 'password',
       placeholder: 'Create your Password',
       label: 'Password',
-      name: 'password',
+      name: 'newPassword',
       'prefix-icon': 'passwordIcon',
       'suffix-icon': 'closeEye',
       classes:
@@ -91,7 +92,7 @@ const form = ref<Form>({
       type: 'password',
       placeholder: 'Confirm your Password',
       label: 'Confirm Password',
-      name: 'confirmPassword',
+      name: 'confirmNewPassword',
       'prefix-icon': 'passwordIcon',
       'suffix-icon': 'closeEye',
       classes:
@@ -178,6 +179,23 @@ const setNewPassword = async () => {
   } finally {
     isCheckInProgress.value = false
   }
+}
+
+const toggleShowPassword = (fieldKey: string) => {
+  form.value[fieldKey].props['suffix-icon'] =
+    form.value[fieldKey].props['suffix-icon'] === 'closeEye'
+      ? 'openEye'
+      : 'closeEye'
+
+  form.value[fieldKey].props.type =
+    form.value[fieldKey].props.type === 'text' ? 'password' : 'text'
+}
+
+const suffixIconClicked = (name: string) => {
+  if (!['newPassword', 'confirmNewPassword'].includes(name)) {
+    return
+  }
+  toggleShowPassword(name)
 }
 
 const isValidForm = computed(() => {

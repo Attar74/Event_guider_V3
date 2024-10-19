@@ -20,8 +20,15 @@
           <div v-for="(value, key) in form" :key="key">
             <component
               :is="value.componentType === 'baseInput' ? baseInput : baseSelect"
+              v-if="
+                key === 'subCategoryUuid'
+                  ? ['Service', 'Venue'].includes(
+                      form?.category?.value.toString()
+                    )
+                  : true
+              "
               v-bind="value.props"
-              @update-input="value.value = $event"
+              @update-input="setInputValue(key, $event)"
               @suffix-icon-click="suffixIconClicked"
             />
           </div>
@@ -76,7 +83,7 @@ interface FormField {
   componentType: string
   value: string | number
   props: {
-    type: string
+    type?: string
     placeholder: string
     label: string
     name: string
@@ -93,6 +100,7 @@ interface FormSelectFiled {
   componentType: string
   value: string | number
   props: {
+    type?: string
     placeholder: string
     label: string
     name: string
@@ -109,10 +117,16 @@ interface FormSelectFiled {
 interface Form {
   [key: string]: FormSelectFiled | FormField
 }
+interface SubCategory {
+  value: string
+  name: string
+  category: string
+}
 
 const isRegisterationInProgress = ref(false)
 const isCheckOn = ref(false)
 const snackbarStore = useSnackbarStore()
+const subCategories = ref<SubCategory[]>([])
 
 const form = ref<Form>({
   tradeName: {
@@ -204,7 +218,7 @@ const form = ref<Form>({
       name: 'subCategoryUuid',
       classes:
         'w-full outline-0 text-[0.875rem] md:text-[1rem] text-[#000] block h-[3rem] md:h-[3.5rem] p-2.5 dark:placeholder-[#AAACB9]',
-      required: true,
+      required: false,
       error: '',
       options: []
     }
@@ -254,12 +268,13 @@ watch(
 )
 
 const toggleShowPassword = (fieldKey: string) => {
-  const field = form.value[fieldKey]
-  if (field) {
-    const newIcon =
-      field.props['suffix-icon'] === 'closeEye' ? 'openEye' : 'closeEye'
-    field.props['suffix-icon'] = newIcon
-  }
+  form.value[fieldKey].props['suffix-icon'] =
+    form.value[fieldKey].props['suffix-icon'] === 'closeEye'
+      ? 'openEye'
+      : 'closeEye'
+
+  form.value[fieldKey].props.type =
+    form.value[fieldKey].props.type === 'text' ? 'password' : 'text'
 }
 
 const suffixIconClicked = (name: string) => {
@@ -277,15 +292,12 @@ const validateForm = () => {
   for (const key in form.value) {
     if (form.value?.[key]?.props?.required) {
       form.value[key].props.error = checkFormVal(key)
+    } else {
+      form.value[key].props.error = ''
     }
   }
 }
 
-/**
- * Checks the value of a form input and returns an error message or an empty string.
- * @param key - The key of the form input to check.
- * @returns An error message if the input is invalid, an empty string otherwise.
- */
 const checkFormVal = (key: string) => {
   let { value } = form.value?.[key]
   value = value?.toString()
@@ -310,6 +322,15 @@ const router = useRouter()
 const isValidForm = computed(() => {
   return Object.values(form.value).every(({ props }) => !props?.error?.length)
 })
+
+const setInputValue = (key: string | number, value: string) => {
+  form.value[key].value = value
+  if (key === 'category') {
+    form.value.subCategoryUuid.props.options = subCategories.value.filter(
+      subCategory => subCategory.category === form.value[key].value
+    )
+  }
+}
 
 const onSubmit = () => {
   isCheckOn.value = true
@@ -354,6 +375,7 @@ const register = async () => {
 interface Item {
   uuid: string
   displayName: string
+  category: string
 }
 
 interface ApiResponse {
@@ -363,10 +385,11 @@ interface ApiResponse {
 const setSubCategories = async () => {
   try {
     const { data } = await useAPI<ApiResponse>(`/account/sub-categories`)
-    form.value.subCategoryUuid.props.options =
+    subCategories.value =
       data.value?.data?.map((item: Item) => ({
         value: item.uuid,
-        name: item.displayName
+        name: item.displayName,
+        category: item.category
       })) || []
   } catch (error) {
     console.log(error)
