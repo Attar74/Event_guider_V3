@@ -10,6 +10,7 @@ interface Venue {
   photos: string[]
   photosCompleted: boolean
   profileCompleted: boolean
+  profileCompletedAt: string
   rating: number
   subCategoryDisplayName:
     | 'Wedding Venue'
@@ -67,7 +68,8 @@ export const useUserStore = defineStore('user', {
         subCategoryDisplayName: '',
         subCategoryUuid: '',
         tradeName: '',
-        uuid: ''
+        uuid: '',
+        profileCompletedAt: ''
       }
     } as User,
     tokens: {
@@ -122,7 +124,8 @@ export const useUserStore = defineStore('user', {
           subCategoryDisplayName: '',
           subCategoryUuid: '',
           tradeName: '',
-          uuid: ''
+          uuid: '',
+          profileCompletedAt: ''
         }
       }
       this.tokens = { accessToken: '', refreshToken: '' }

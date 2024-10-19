@@ -32,9 +32,9 @@
         Our team will review your data carefully and notify you to continue all
         process to publish your account with us
       </p>
-      <NuxtLink to="/registeration-steps/reviewing">
+      <NuxtLink :to="{ name: 'vendor-form-reviewing___en' }">
         <button
-          :disabled="finishStatusBtn"
+          :disabled="!profileCompleted"
           class="rounded-[2rem] bg-[#FF3D9A] w-[11.25rem] border-[0.063rem] border-[#FF3D9A] h-[3.5rem] cursor-pointer disabled:border-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[#AAACB9]"
         >
           <p v-if="true" class="text-[#fff] text[1rem] leading-7 font-bold">
@@ -54,13 +54,8 @@ import { useUserStore } from '~/store/user'
 
 const userStore = useUserStore()
 const { user } = userStore
-const { businessInfoCompleted, photosCompleted, profileCompleted } = user.venue
+const { profileCompleted } = user.venue
 const steps = getSteps()
-const finishStatusBtn = computed(() => {
-  return [businessInfoCompleted, photosCompleted, profileCompleted].some(
-    status => !status
-  )
-})
 definePageMeta({
   layout: 'vendor',
   requiresAuth: true
