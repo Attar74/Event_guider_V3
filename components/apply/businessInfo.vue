@@ -87,7 +87,7 @@
           <div
             class="flex flex-col sm:flex-row justify-center gap-x-[1.5rem] gap-y-[0.5rem] sm:gap-y-0 mx-auto"
           >
-            <NuxtLink to="/registeration-steps">
+            <NuxtLink to="/en/vendor">
               <button
                 class="rounded-[2rem] bg-[#fff] border-[0.063rem] border-[#FF3D9A] w-[11.25rem] h-[3.5rem] cursor-pointer"
               >
