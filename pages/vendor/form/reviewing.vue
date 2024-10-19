@@ -23,9 +23,8 @@
           :key="item"
           class="text-[#2A2F4F] text-[1.25rem] leading-9 font-semibold p-[1.375rem] bg-[#fff] rounded-[1rem]"
         >
-          3 D
+          {{ item }}
         </p>
-        {{ durationDifference }}
       </div>
     </div>
     <p
@@ -49,21 +48,80 @@
 </template>
 
 <script setup lang="ts">
+import {
+  add,
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+  differenceInSeconds
+} from 'date-fns'
 import SVGIcon from '~/helper/SVGIcon.vue'
-import { formatDistance } from 'date-fns'
 
-const datesItem = ref({
-  days: 0,
-  hours: 0,
-  minuts: 0,
-  seconds: 0
+import { useUserStore } from '~/store/user'
+
+const userStore = useUserStore()
+const { user } = userStore
+const { profileCompletedAt } = user.venue
+
+const datesItem = computed(() => {
+  return [
+    `${timeLeft.value.daysBetween} D`,
+    `${timeLeft.value.hoursBetween} H`,
+    `${timeLeft.value.minutsBetween} M`,
+    `${timeLeft.value.secondsBetween} S`
+  ]
 })
 
-const completedData = computed(() => {
-  return new Date('2024-10-18 00:00:00')
+const timeLeft = ref({
+  daysBetween: 0,
+  hoursBetween: 0,
+  minutsBetween: 0,
+  secondsBetween: 0
 })
 
-const durationDifference = formatDistance(completedData.value, new Date(), {
-  addSuffix: true
+let intervalId: string | number | NodeJS.Timeout | null | undefined = null
+
+const updateTimeLeft = () => {
+  const now = new Date()
+  const daysBetween = differenceInDays(
+    add(profileCompletedAt, { days: 4 }),
+    now
+  )
+
+  const hoursBetween =
+    differenceInHours(add(profileCompletedAt, { days: 4 }), now) % 24
+
+  const minutsBetween =
+    differenceInMinutes(add(profileCompletedAt, { days: 4 }), now) % 60
+  const secondsBetween =
+    differenceInSeconds(add(profileCompletedAt, { days: 4 }), now) % 60
+
+  if (!secondsBetween) {
+    timeLeft.value = {
+      daysBetween: 0,
+      hoursBetween: 0,
+      minutsBetween: 0,
+      secondsBetween: 0
+    }
+    if (intervalId !== null) {
+      clearInterval(intervalId)
+    }
+    // Stop updating the time left
+    return
+  }
+
+  // Update the reactive object
+  timeLeft.value = { daysBetween, hoursBetween, minutsBetween, secondsBetween }
+}
+
+// Update time left every second
+onMounted(() => {
+  updateTimeLeft() // Initial update
+  intervalId = setInterval(updateTimeLeft, 1000) // Update every second
+})
+onBeforeUnmount(() => {
+  if (intervalId !== null) {
+    clearInterval(intervalId)
+  }
 })
 </script>
