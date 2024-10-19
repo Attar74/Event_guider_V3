@@ -2,7 +2,7 @@
   <transition name="snackbar-fade">
     <div
       v-if="snackbarStore.snackbar.isVisible"
-      class="custom-shadow absolute rounded-[0.625rem] z-50 flex top-8 left-1/2 translate-x-[-50%] min-w-[20rem] p-[1rem]"
+      class="custom-shadow fixed rounded-[0.625rem] z-50 flex top-8 left-1/2 translate-x-[-50%] min-w-[20rem] p-[1rem]"
       :style="`background-color: ${bgColor}`"
     >
       <div class="flex justify-center gap-x-3 mx-auto">

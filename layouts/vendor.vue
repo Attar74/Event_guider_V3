@@ -1,6 +1,7 @@
 <template>
   <div>
     <Header />
+    <AtomsSnackbar />
     <NuxtPage />
     <Footer />
   </div>

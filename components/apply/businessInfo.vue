@@ -1,10 +1,10 @@
 <template>
   <div
     class="mx-auto px-[1rem] md:px-[4rem] mt-[2.5rem] mb-[10rem]"
-    :class="{ 'max-w-[65rem]': true }"
+    :class="{ 'w-[55rem]': true }"
   >
-    <div v-if="!isPageLoading">
-      <form @submit.prevent="onSubmit">
+    <div>
+      <form v-if="!isPageLoading" @submit.prevent="onSubmit">
         <div class="my-[2.5rem]">
           <p
             class="text-[1.25rem] text-[#2A2F4F] font-semibold leading-9 mb-[0.5rem]"
@@ -15,8 +15,9 @@
             class="w-full h-full overflow-hidden shadow-lg p-[1rem] sm:p-[1.5rem] rounded-2xl bg-[#fff] mx-auto"
           >
             <baseInput
-              v-bind="form.name.props"
-              @update-input="form.name.value = $event"
+              v-bind="form.username.props"
+              :value="form.username.value"
+              @update-input="form.username.value = $event"
             />
             <NuxtLink>
               <p class="text-[#FF3D9A] text-[1rem] leading-7">
@@ -43,8 +44,9 @@
               </p>
               <div class="mt-[1rem]">
                 <baseTextArea
-                  v-bind="form.businessDescription.props"
-                  @update-input="form.businessDescription.value = $event"
+                  v-bind="form.description.props"
+                  :value="form.description.value"
+                  @update-input="form.description.value = $event"
                 />
               </div>
             </div>
@@ -71,10 +73,9 @@
               >
                 <div v-for="(value, key) in form" :key="key">
                   <baseInput
-                    v-if="
-                      !['name', 'businessDescription'].includes(key.toString())
-                    "
+                    v-if="!['username', 'description'].includes(key.toString())"
                     v-bind="value.props"
+                    :value="value.value"
                     @update-input="value.value = $event"
                   />
                 </div>
@@ -111,6 +112,9 @@
           </div>
         </div>
       </form>
+      <div v-else>
+        <loader v-for="i in 2" :key="i" />
+      </div>
     </div>
   </div>
 </template>
@@ -119,6 +123,8 @@
 import SVGIcon from '~/helper/SVGIcon.vue'
 import baseInput from '../formElements/baseInput.vue'
 import baseTextArea from '../formElements/baseTextArea.vue'
+import loader from '../ui/loader.vue'
+import { useSnackbarStore } from '~/store/snackbarStore'
 import useWebsiteValidator from '~/composables/useWebsiteValidator'
 
 const saveBtnLoading = ref(false)
@@ -140,13 +146,13 @@ interface Form {
 }
 
 const form = ref<Form>({
-  name: {
+  username: {
     value: '',
     props: {
       type: 'text',
       placeholder: 'Enter your name',
       label: 'User Name',
-      name: 'name',
+      name: 'username',
       'prefix-icon': 'userIcon',
       classes:
         'w-full border-[#D4D5DC] border-[0.063rem] outline-0 text-[0.875rem] md:text-[1rem] text-[#000] rounded-full block h-[3rem] md:h-[3.5rem] pl-10 p-2.5 dark:placeholder-[#AAACB9]',
@@ -154,11 +160,11 @@ const form = ref<Form>({
       error: ''
     }
   },
-  businessDescription: {
+  description: {
     value: '',
     props: {
       placeholder: 'Enter your message',
-      name: 'businessDescription',
+      name: 'description',
       classes:
         'w-full bg-[#F9F9FA] w-full border-[#D4D5DC] border-[0.063rem] outline-0 text-[0.875rem] md:text-[1rem] text-[#000] rounded-xl block pt-[0.875rem] pl-[1.25rem]',
       required: true,
@@ -193,7 +199,7 @@ const form = ref<Form>({
       error: ''
     }
   },
-  phoneNumber: {
+  mobileNumber: {
     value: '',
     props: {
       type: 'tel',
@@ -207,13 +213,13 @@ const form = ref<Form>({
       error: ''
     }
   },
-  phoneLnadline: {
+  telephone: {
     value: '',
     props: {
       type: 'tel',
       placeholder: 'Ex: 01xxxxxxxxx',
-      label: 'Mobile Number',
-      name: 'Mobile Number',
+      label: 'Telephone',
+      name: 'telephone',
       'prefix-icon': 'landlineIcon',
       classes:
         'w-full border-[#D4D5DC] border-[0.063rem] outline-0 text-[0.875rem] md:text-[1rem] text-[#000] rounded-full block h-[3rem] md:h-[3.5rem] pl-10 p-2.5 dark:placeholder-[#AAACB9]',
@@ -221,13 +227,13 @@ const form = ref<Form>({
       error: ''
     }
   },
-  website: {
+  websiteUrl: {
     value: '',
     props: {
       type: 'text',
       placeholder: 'Enter Website',
       label: 'Website',
-      name: 'Website',
+      name: 'websiteUrl',
       'prefix-icon': 'WebsiteIcon',
       classes:
         'w-full border-[#D4D5DC] border-[0.063rem] outline-0 text-[0.875rem] md:text-[1rem] text-[#000] rounded-full block h-[3rem] md:h-[3.5rem] pl-10 p-2.5 dark:placeholder-[#AAACB9]',
@@ -248,6 +254,7 @@ watch(
 )
 
 const isCheckOn = ref(false)
+const snackbarStore = useSnackbarStore()
 
 // Validate Form inputs
 const validateForm = () => {
@@ -272,11 +279,11 @@ const checkFormVal = (key: string) => {
   switch (key) {
     case 'email':
       return useEmailValidator(value)
-    case 'phoneNumber':
+    case 'mobileNumber':
       return useMobileValidator(value, 'mobile')
-    case 'phoneLnadline':
+    case 'telephone':
       return useMobileValidator(value, 'landLine')
-    case 'website':
+    case 'websiteUrl':
       return useWebsiteValidator(value)
     default:
       return !value.length
@@ -287,8 +294,51 @@ const checkFormVal = (key: string) => {
   }
 }
 
-const isPageLoading = ref(false)
-// const router = useRouter()
+const formPayload = computed(() => {
+  const payload: Record<string, string | number> = {}
+  for (const key in form.value) {
+    payload[key] = form.value[key].value
+  }
+  return payload
+})
+
+interface Item {
+  [key: string]: string | number // Add index signature for dynamic keys
+  // Other known properties
+}
+
+interface ApiResponse {
+  data: Item
+}
+
+const updateBusinessInfo = async () => {
+  try {
+    const { status } = await useAPI<ApiResponse>(`/vendors/my/business-info`, {
+      method: 'PUT',
+      body: formPayload.value
+    })
+
+    if (status.value === 'error') {
+      snackbarStore.fireSnack({
+        isVisible: true,
+        text: 'Something went wrong',
+        type: 'error'
+      })
+      return
+    }
+    snackbarStore.fireSnack({
+      isVisible: true,
+      text: 'Bussiness Info has been updated successfully',
+      type: 'success'
+    })
+    navigateTo({ name: 'vendor-form-location___en' })
+  } catch (e) {
+  } finally {
+    saveBtnLoading.value = false
+  }
+}
+
+const isPageLoading = ref(true)
 const isValidForm = computed(() => {
   return Object.values(form.value).every(({ props }) => !props?.error?.length)
 })
@@ -298,10 +348,48 @@ const onSubmit = () => {
   if (isValidForm.value) {
     isCheckOn.value = true
     saveBtnLoading.value = true
-    setTimeout(() => {
-      console.log('xxx')
-      // router.push({ name: 'index___en' })
-    }, 2000)
+    updateBusinessInfo()
   }
 }
+
+const updateFormValues = (data: Record<string, string | number>) => {
+  if (data) {
+    for (const key in data) {
+      // Check if the form field exists before assigning the value
+      if (form.value[key]) {
+        form.value[key] = {
+          ...form.value[key], // Keep the props intact
+          value: data[key] // Set the new value
+        }
+      }
+    }
+  }
+}
+
+const setBusniessInfoData = async () => {
+  try {
+    const { data, status } = await useAPI<ApiResponse>(
+      `/vendors/my/business-info`,
+      {
+        method: 'GET'
+      }
+    )
+    if (status.value === 'error') {
+      snackbarStore.fireSnack({
+        isVisible: true,
+        text: 'Something went wrong',
+        type: 'error'
+      })
+      return
+    }
+    if (data?.value?.data) updateFormValues(data.value.data)
+  } catch (e) {
+  } finally {
+    isPageLoading.value = false
+  }
+}
+
+onMounted(() => {
+  setBusniessInfoData()
+})
 </script>

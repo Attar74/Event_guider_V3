@@ -4,7 +4,7 @@
     :class="{ 'max-w-[55rem]': true }"
   >
     <div>
-      <div class="text-center">
+      <div class="text-center mb-[2rem]">
         <div class="bg-[#ff3d9a08] mx-auto p-[1.5rem] w-[5rem] rounded-xl">
           <svg
             xmlns="http://www.w3.org/2000/svg"

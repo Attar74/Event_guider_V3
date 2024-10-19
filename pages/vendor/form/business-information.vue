@@ -13,7 +13,7 @@
       </p>
       <p
         class="text-[#7F8295] text-[1rem] leading-7 mx-auto"
-        :style="{ 'max-width': '45rem' }"
+        :style="{ 'max-width': '43rem' }"
       >
         Your storefront features information about your wedding services to
         attract and convert our audience of engaged couples.

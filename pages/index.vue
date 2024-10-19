@@ -255,8 +255,6 @@ const login = async () => {
       body: formPayload.value
     })
 
-    console.log(data)
-
     if (status.value === 'error') {
       snackbarStore.fireSnack({
         isVisible: true,
