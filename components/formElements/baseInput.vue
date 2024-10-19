@@ -42,7 +42,7 @@
 </template>
 <script lang="ts" setup>
 import SVGIcon from '~/helper/SVGIcon.vue'
-defineProps({
+const props = defineProps({
   type: { type: String, default: 'text' },
   name: { type: String, default: '' },
   classes: { type: String, default: '' },
@@ -73,15 +73,26 @@ defineProps({
   suffixIcon: {
     type: String,
     default: ''
+  },
+  value: {
+    type: [String, Number],
+    default: ''
   }
 })
 
-const inputVal = ref('')
+const inputVal = ref(props.value)
 const emits = defineEmits(['updateInput', 'suffixIconClick'])
 
 watch(inputVal, newValue => {
   emits('updateInput', newValue)
 })
+
+watch(
+  () => props.value, // Watch the 'value' prop
+  newValue => {
+    inputVal.value = newValue
+  }
+)
 </script>
 <style scopped>
 input[type='number']::-webkit-outer-spin-button,

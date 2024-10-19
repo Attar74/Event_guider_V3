@@ -1,19 +1,13 @@
-<!-- <template>
-  <div>
-    <h1>Pick a Location</h1>
-    <GoogleMap />
-  </div>
-</template>
-
-<script setup lang="ts">
-import GoogleMap from '~/components/ui/GoogleMap.vue'
-</script> -->
 <template>
   <div
     class="mx-auto px-[1rem] md:px-[4rem] mt-[2.5rem] mb-[10rem]"
-    :class="{ 'max-w-[55rem]': true }"
+    :class="{ 'w-[55rem]': true }"
   >
-    <form class="min-w-[44rem]" @submit.prevent="onSubmit">
+    <form
+      v-if="!isPageLoading"
+      class="min-w-[44rem]"
+      @submit.prevent="onSubmit"
+    >
       <div class="my-[2.5rem]">
         <p
           class="text-[1.25rem] text-[#2A2F4F] font-semibold leading-9 mb-[0.5rem]"
@@ -25,21 +19,13 @@ import GoogleMap from '~/components/ui/GoogleMap.vue'
           class="w-full h-full shadow-lg p-[1rem] sm:p-[1.5rem] rounded-2xl bg-[#fff] mx-auto"
         >
           <div class="mb-[1.5rem]">
-            <GoogleMap />
-          </div>
-          <div class="mt-[1.5rem]">
-            <p class="text-[#2A2F4F] text-[0.875rem] leading-6">
-              Address
-              <span class="text-[#FF3D9A]">*</span>
-            </p>
+            <GoogleMap @set-address="setAddress" />
           </div>
           <div class="flex justify-center">
             <div class="mx-auto w-full">
               <div v-for="(value, key) in form" :key="key" class="mt-[1.5rem]">
-                <component
-                  :is="
-                    value.componentType === 'baseInput' ? baseInput : baseSelect
-                  "
+                <baseInput
+                  :value="value.value"
                   v-bind="value.props"
                   @update-input="value.value = $event"
                 />
@@ -70,20 +56,19 @@ import GoogleMap from '~/components/ui/GoogleMap.vue'
         </div>
       </div>
     </form>
+    <div v-else>
+      <loader v-for="i in 2" :key="i" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import GoogleMap from '../ui/GoogleMap.vue'
 import baseInput from '../formElements/baseInput.vue'
-import baseSelect from '../formElements/baseSelect.vue'
+import loader from '../ui/loader.vue'
+import { useSnackbarStore } from '~/store/snackbarStore'
 
-interface option {
-  value: string
-  name: string
-}
 interface FormField {
-  componentType: string
   value: string | number
   props: {
     type: string
@@ -97,50 +82,30 @@ interface FormField {
   }
 }
 
-interface FormSelectFiled {
-  componentType: string
-  value: string | number
-  props: {
-    placeholder: string
-    label: string
-    name: string
-    'prefix-icon'?: string
-    classes: string
-    required: boolean
-    error: string
-    options: option[]
-    loading: boolean
-  }
-}
-
 interface Form {
-  [key: string]: FormField | FormSelectFiled
+  [key: string]: FormField
 }
 
-const isRegisterationInProgress = ref(false)
+const snackbarStore = useSnackbarStore()
+const saveBtnLoading = ref(false)
+const isPageLoading = ref(true)
 const isCheckOn = ref(false)
 const form = ref<Form>({
   city: {
-    componentType: 'baseSelect',
     value: '',
     props: {
-      loading: false,
+      type: 'text',
       placeholder: 'Choose your City',
       label: 'City',
       name: 'city',
+      'prefix-icon': 'locationPin',
       classes:
-        'w-full outline-0 text-[0.875rem] md:text-[1rem] text-[#000] block h-[3rem] md:h-[3.5rem] p-2.5 dark:placeholder-[#AAACB9]',
+        'w-full border-[#D4D5DC] border-[0.063rem] outline-0 text-[0.875rem] md:text-[1rem] text-[#000] rounded-full block h-[3rem] md:h-[3.5rem] pl-10 p-2.5 dark:placeholder-[#AAACB9]',
       required: true,
-      error: '',
-      options: [
-        { name: 'Cairo', value: '1' },
-        { name: 'Giza', value: '2' },
-        { name: 'Alex', value: '3' }
-      ]
+      error: ''
     }
   },
   address: {
-    componentType: 'baseInput',
     value: '',
     props: {
       type: 'text',
@@ -189,20 +154,112 @@ const checkFormVal = (key: string) => {
   return !!value.length ? '' : `The ${key} is Required`
 }
 
-const router = useRouter()
 const isValidForm = computed(() => {
   return Object.values(form.value).every(({ props }) => !props?.error?.length)
 })
+
+const formPayload = computed(() => {
+  const payload: Record<string, string | number> = {}
+  for (const key in form.value) {
+    payload[key] = form.value[key].value
+  }
+  return payload
+})
+
+const updateLocationInfo = async () => {
+  try {
+    const { status } = await useAPI<ApiResponse>(
+      `/vendors/my/business-address`,
+      {
+        method: 'PUT',
+        body: formPayload.value
+      }
+    )
+
+    if (status.value === 'error') {
+      snackbarStore.fireSnack({
+        isVisible: true,
+        text: 'Something went wrong',
+        type: 'error'
+      })
+      return
+    }
+    snackbarStore.fireSnack({
+      isVisible: true,
+      text: 'Location Info has been updated successfully',
+      type: 'success'
+    })
+    navigateTo({ name: 'vendor-form-photos___en' })
+  } catch (e) {
+  } finally {
+    saveBtnLoading.value = false
+  }
+}
 
 const onSubmit = () => {
   isCheckOn.value = true
   validateForm()
   if (isValidForm.value) {
     isCheckOn.value = true
-    isRegisterationInProgress.value = true
-    setTimeout(() => {
-      router.push({ name: 'index___en' })
-    }, 2000)
+    saveBtnLoading.value = true
+    updateLocationInfo()
   }
 }
+
+interface Item {
+  [key: string]: string | number // Add index signature for dynamic keys
+  // Other known properties
+}
+
+interface ApiResponse {
+  data: Item
+}
+
+const updateFormValues = (data: Record<string, string | number>) => {
+  if (data) {
+    for (const key in data) {
+      // Check if the form field exists before assigning the value
+      if (form.value[key]) {
+        form.value[key] = {
+          ...form.value[key], // Keep the props intact
+          value: data[key] // Set the new value
+        }
+      }
+    }
+  }
+}
+
+const setAddress = (fullAddress: Record<string, string | number>) => {
+  form.value.address.value = fullAddress.address
+  form.value.city.value = fullAddress.city
+}
+
+const setLocationData = async () => {
+  try {
+    const { data, status } = await useAPI<ApiResponse>(
+      `/vendors/my/business-address`,
+      {
+        method: 'GET'
+      }
+    )
+    if (status.value === 'error') {
+      snackbarStore.fireSnack({
+        isVisible: true,
+        text: 'Something went wrong',
+        type: 'error'
+      })
+      return
+    }
+    if (data?.value?.data) updateFormValues(data.value.data)
+  } catch (e) {
+  } finally {
+    isPageLoading.value = false
+  }
+}
+
+onMounted(() => {
+  setTimeout(() => {
+    setLocationData()
+  })
+})
 </script>

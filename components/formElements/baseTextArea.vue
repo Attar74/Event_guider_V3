@@ -28,7 +28,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-defineProps({
+const props = defineProps({
   rows: {
     default: 5,
     type: Number
@@ -50,10 +50,14 @@ defineProps({
   placeholder: {
     type: String,
     default: ''
+  },
+  value: {
+    type: [String, Number],
+    default: ''
   }
 })
 
-const inputVal = ref('')
+const inputVal = ref(props.value)
 const emits = defineEmits(['updateInput'])
 
 watch(inputVal, newValue => {

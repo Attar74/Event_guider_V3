@@ -46,7 +46,7 @@ interface Option {
   [key: string]: option // Replace 'any' with a more specific type based on the actual option structure
 }
 
-defineProps({
+const props = defineProps({
   classes: { type: String, default: '' },
   loading: {
     default: false,
@@ -77,13 +77,17 @@ defineProps({
   required: {
     type: Boolean,
     default: false
+  },
+  value: {
+    type: String,
+    default: ''
   }
 })
 
 const emits = defineEmits(['updateInput'])
 
 // Reactive state and other script setup code
-const inputVal = ref<string | number>('') // Use more specific type if possible
+const inputVal = ref<string | number>(props.value) // Use more specific type if possible
 
 // Watchers and functions
 watch(inputVal, newValue => {

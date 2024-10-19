@@ -159,7 +159,7 @@ const formPayload = computed(() => {
 
 const setNewPassword = async () => {
   try {
-    const { status } = await useAPI(`/account/forgot-password`, {
+    const { status } = await useAPI(`/account/reset-password`, {
       method: 'POST',
       body: { ...formPayload.value, email: route.query.email }
     })

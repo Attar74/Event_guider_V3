@@ -7,7 +7,7 @@ export const getSteps = () => {
       description: 'Add information about your business',
       estimitadeTime: '6m',
       icon: 'Work',
-      key: 'profile'
+      key: 'businessInfo'
     },
     {
       id: 2,
