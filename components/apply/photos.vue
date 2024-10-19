@@ -4,7 +4,8 @@
     :class="{ 'w-[55rem]': true }"
   >
     <p class="text-[#2A2F4F] text-[1.25rem] font-[600] mb-[0.5rem]">
-      Add photos
+      {{ images.length < 8 ? 'Add' : 'Uploded' }}
+      Photos
     </p>
     <div
       class="w-full h-full shadow-lg p-[1rem] sm:p-[1.5rem] rounded-2xl bg-[#fff] mx-auto"
@@ -21,6 +22,7 @@
           @change="handleFileChange"
         />
         <div
+          v-if="images.length < 8"
           class="flex cursor-pointer border-[0.063rem] border-[#FF3D9A] border-dashed rounded-[0.875rem] bg-[#ff3d9a08] py-[2.5rem]"
         >
           <div class="mx-auto flex flex-col justify-center">
@@ -80,7 +82,7 @@
       <div
         class="flex flex-col sm:flex-row justify-center gap-x-[1.5rem] gap-y-[0.5rem] sm:gap-y-0 mx-auto"
       >
-        <NuxtLink :to="{ name: 'vendor-form-location___en' }">
+        <NuxtLink to="location">
           <button
             class="rounded-[2rem] bg-[#fff] border-[0.063rem] border-[#FF3D9A] w-[11.25rem] h-[3.5rem] cursor-pointer"
           >
