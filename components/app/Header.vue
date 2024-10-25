@@ -4,11 +4,24 @@
       class="bg-white border-gray-200 px-4 lg:px-6 border-b-[#D4D5DC] border-[1px]"
     >
       <div
-        class="flex flex-wrap items-center justify-between mx-auto p-4 md:p-[0.75rem]"
-        :class="isDrawer ? 'w-full' : 'max-w-screen-xl'"
+        class="flex flex-wrap items-center justify-between p-4 md:p-[0.71rem]"
+        :class="
+          isDrawer &&
+          typeof route.name === 'string' &&
+          route.name.includes('vendor-home')
+            ? 'w-full'
+            : 'max-w-screen-xl mx-auto'
+        "
       >
         <div :class="{ 'flex justify-between gap-x-[5rem]': isDrawer }">
-          <NuxtLink to="/" class="flex items-center mx-auto">
+          <NuxtLink
+            v-if="
+              typeof route.name === 'string' &&
+              !route.name.includes('vendor-home')
+            "
+            to="/"
+            class="flex items-center mx-auto"
+          >
             <SVGIcon icon="eColored" class="mr-3 w-[1.625rem] h-auto" />
             <span class="text-[#2A2F4F] text-[1.5rem] font-extrabold leading-9">
               Event Guiders
@@ -16,17 +29,21 @@
           </NuxtLink>
 
           <div
-            v-if="isDrawer"
+            v-else
             class="flex justify-between gap-x-[1rem] cursor-pointer"
+            :class="isDrawer ? 'translate-x-[20rem]' : ''"
           >
-            <SVGIcon icon="burgerMenu" />
+            <SVGIcon
+              icon="burgerMenu"
+              :class="!isDrawer ? 'rotate-180' : ''"
+              @click="toggleDrawer"
+            />
             <p class="text-[#7F8295] text-[0.875rem] leading-6 my-auto">
               Storefront
             </p>
             <p class="text-[#2A2F4F] text-[1rem] leading-7 font-bold my-auto">
               /
             </p>
-
             <p class="text-[#2A2F4F] text-[1rem] leading-7 font-bold my-auto">
               Business info
             </p>
@@ -117,7 +134,7 @@
                 </p>
                 <Menu
                   :is-menu-open="isMenuOpen"
-                  width="16.875rem"
+                  width="10.875rem"
                   @close-menu="isMenuOpen = false"
                 >
                   <template #trigger>
@@ -166,10 +183,18 @@ const mobileNumber = computed(() => userStore.user.mobileNumber)
 const isMenuOpen = ref(false)
 const switchBtn = ref(false)
 const mobileMenuOpen = ref(false)
-const isDrawer = ref(false)
+const isDrawer = ref(true)
+const route = useRoute()
 
 const handleLogout = () => {
   userStore.clearUser()
   navigateTo('/')
+}
+
+const emits = defineEmits(['toggle-drawer'])
+
+const toggleDrawer = () => {
+  isDrawer.value = !isDrawer.value
+  emits('toggle-drawer')
 }
 </script>

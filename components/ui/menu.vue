@@ -12,7 +12,7 @@
       <div
         v-if="isMenuOpen"
         :style="{ width: `${width}` }"
-        class="absolute mt-5 bg-white rounded-[1.5rem] shadow-lg z-10 p-2"
+        class="absolute -right-[2rem] mt-8 bg-white rounded-[1.5rem] shadow-lg z-10 p-2"
       >
         <slot name="content" />
       </div>

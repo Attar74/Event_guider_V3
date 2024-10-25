@@ -217,13 +217,13 @@ const form = ref<Form>({
     value: '',
     props: {
       type: 'tel',
-      placeholder: 'Ex: 01xxxxxxxxx',
+      placeholder: 'Ex: 02xxxxxxxx',
       label: 'Telephone',
       name: 'telephone',
       'prefix-icon': 'landlineIcon',
       classes:
         'w-full border-[#D4D5DC] border-[0.063rem] outline-0 text-[0.875rem] md:text-[1rem] text-[#000] rounded-full block h-[3rem] md:h-[3.5rem] pl-10 p-2.5 dark:placeholder-[#AAACB9]',
-      required: true,
+      required: false,
       error: ''
     }
   },
@@ -237,7 +237,7 @@ const form = ref<Form>({
       'prefix-icon': 'WebsiteIcon',
       classes:
         'w-full border-[#D4D5DC] border-[0.063rem] outline-0 text-[0.875rem] md:text-[1rem] text-[#000] rounded-full block h-[3rem] md:h-[3.5rem] pl-10 p-2.5 dark:placeholder-[#AAACB9]',
-      required: true,
+      required: false,
       error: ''
     }
   }
@@ -262,8 +262,10 @@ const validateForm = () => {
     return
   }
   for (const key in form.value) {
-    if (form.value?.[key]?.props?.required) {
+    if (form.value?.[key]?.props?.required || form.value?.[key]?.value.length) {
       form.value[key].props.error = checkFormVal(key)
+    } else {
+      form.value[key].props.error = ''
     }
   }
 }
