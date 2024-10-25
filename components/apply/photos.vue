@@ -173,6 +173,10 @@ const uploadPhotos = async () => {
     saveBtnLoading.value = false
     return
   }
+  if (!imagesToBeSend.value.length) {
+    navigateTo({ name: 'vendor-form-reviewing___en' })
+    return
+  }
   const formData = new FormData()
 
   // Append each file to the FormData object
@@ -196,6 +200,7 @@ const uploadPhotos = async () => {
       })
       return
     }
+
     snackbarStore.fireSnack({
       isVisible: true,
       text: `${imagesToBeSend.value.length} image(s) uploaded successfully!`,

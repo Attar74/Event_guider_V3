@@ -22,9 +22,7 @@
               :is="value.componentType === 'baseInput' ? baseInput : baseSelect"
               v-if="
                 key === 'subCategoryUuid'
-                  ? ['Service', 'Venue'].includes(
-                      form?.category?.value.toString()
-                    )
+                  ? !!form.subCategoryUuid.props.options?.length
                   : true
               "
               v-bind="value.props"
@@ -327,8 +325,10 @@ const setInputValue = (key: string | number, value: string) => {
   form.value[key].value = value
   if (key === 'category') {
     form.value.subCategoryUuid.props.options = subCategories.value.filter(
-      subCategory => subCategory.category === form.value[key].value
+      subCategory => subCategory.category === form.value.category.value
     )
+    form.value.subCategoryUuid.props.required =
+      !!form.value.subCategoryUuid.props?.options?.length
   }
 }
 
@@ -343,9 +343,12 @@ const onSubmit = () => {
 }
 
 const formPayload = computed(() => {
-  const payload: Record<string, string | number> = {}
+  let payload: Record<string, string | number> = {}
   for (const key in form.value) {
-    payload[key] = form.value[key].value
+    payload = {
+      ...payload,
+      ...(!!form.value[key].value && { [key]: form.value[key].value })
+    }
   }
   return payload
 })
