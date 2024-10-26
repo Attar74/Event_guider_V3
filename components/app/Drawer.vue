@@ -60,11 +60,11 @@
             </svg>
             <p class="text[1rem] leading-7 font-bold my-auto">Dashboard</p>
           </button>
-          <NuxtLink to="/storefront/businessInfo">
+          <NuxtLink to="storefront">
             <button
-              class="px-[1.25rem] py-[1.125rem] rounded-[0.5rem] cursor-pointer flex justify-start gap-x-[0.5rem]"
+              class="px-[1.25rem] py-[1.125rem] rounded-[0.5rem] cursor-pointer flex justify-start gap-x-[0.5rem] w-full"
               :class="
-                route.path.includes('/storefront/businessInfo')
+                route.path.includes('storefront')
                   ? 'bg-[#FF3D9A] border-[0.063rem] border-[#FF3D9A] text-[#fff]'
                   : 'bg-[#fff] border-0 hover:text-[#FF3D9A] text-[#2A2F4F]'
               "
@@ -74,20 +74,12 @@
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
-                :fill="
-                  route.path.includes('/storefront/businessInfo')
-                    ? '#FFF'
-                    : '#2A2F4F'
-                "
+                :fill="route.path.includes('storefront') ? '#FFF' : '#2A2F4F'"
                 class="my-auto"
               >
                 <path
                   d="M20.25 5.04983V2.83333H22.0833C22.5893 2.83333 23 2.42267 23 1.91667C23 1.41067 22.5893 1 22.0833 1H5.58333C3.05608 1 1 3.05608 1 5.58333V22.0833C1 22.5893 1.41067 23 1.91667 23C2.42267 23 2.83333 22.5893 2.83333 22.0833V5.58333C2.83333 4.06717 4.06717 2.83333 5.58333 2.83333H7.41667V5.04983C5.79967 5.75842 4.66667 7.3745 4.66667 9.25V14.75C4.66667 17.2773 6.72275 19.3333 9.25 19.3333H18.4167C20.9439 19.3333 23 17.2773 23 14.75V9.25C23 7.3745 21.867 5.75842 20.25 5.04983ZM9.25 2.83333H18.4167V4.66667H9.25V2.83333ZM21.1667 14.75C21.1667 16.2662 19.9328 17.5 18.4167 17.5H9.25C7.73383 17.5 6.5 16.2662 6.5 14.75V9.25C6.5 7.73383 7.73383 6.5 9.25 6.5H18.4167C19.9328 6.5 21.1667 7.73383 21.1667 9.25V14.75Z"
-                  :fill="
-                    route.path.includes('/storefront/businessInfo')
-                      ? '#FFF'
-                      : '#2A2F4F'
-                  "
+                  :fill="route.path.includes('storefront') ? '#FFF' : '#2A2F4F'"
                 />
               </svg>
               <p class="text[1rem] leading-7 font-bold my-auto">Storefront</p>

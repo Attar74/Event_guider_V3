@@ -41,9 +41,12 @@
 </template>
 
 <script setup lang="ts">
+import approved from '~/middleware/approved'
 import photos from '~/components/apply/photos.vue'
 
 definePageMeta({
-  layout: 'vendor'
+  layout: 'vendor',
+  requiresAuth: true,
+  middleware: approved
 })
 </script>

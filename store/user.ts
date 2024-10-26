@@ -35,6 +35,13 @@ interface User {
   venue: Venue
 }
 
+interface dynamicData {
+  addressCompleted?: boolean
+  photosCompleted?: boolean
+  profileCompleted?: boolean
+  profileCompletedAt?: string
+}
+
 interface AuthTokens {
   accessToken: string
   refreshToken: string
@@ -84,6 +91,12 @@ export const useUserStore = defineStore('user', {
     setUser(userData: User) {
       Object.assign(this.user, userData)
       localStorage.setItem('user', JSON.stringify(userData))
+    },
+
+    // Update user Data information photosCompleted, profileCompleted, profileCompletedAt
+    UpdateUserData(dynamicData: dynamicData) {
+      Object.assign(this.user, { ...this.user, ...dynamicData })
+      localStorage.setItem('user', JSON.stringify(this.user))
     },
 
     // Set tokens

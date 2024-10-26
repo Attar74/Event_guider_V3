@@ -2,7 +2,7 @@
   <Html :dir="locale === 'ar' ? 'rtl' : 'ltr'">
     <NuxtLayout>
       <AtomsSnackbar />
-      <!-- <NuxtLoadingIndicator /> -->
+      <NuxtLoadingIndicator />
       <NuxtPage />
     </NuxtLayout>
   </Html>

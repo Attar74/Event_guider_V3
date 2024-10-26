@@ -28,8 +28,11 @@
   </div>
 </template>
 <script setup lang="ts">
+import approved from '~/middleware/approved'
 import location from '~/components/apply/location.vue'
 definePageMeta({
-  layout: 'vendor'
+  layout: 'vendor',
+  requiresAuth: true,
+  middleware: approved
 })
 </script>

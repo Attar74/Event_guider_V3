@@ -38,7 +38,10 @@
         <div
           class="flex flex-col sm:flex-row justify-center gap-x-[1.5rem] gap-y-[0.5rem] sm:gap-y-0 mx-auto"
         >
-          <NuxtLink to="business-information">
+          <NuxtLink
+            v-if="route.name === 'vendor-form-location___en'"
+            to="business-information"
+          >
             <button
               class="rounded-[2rem] bg-[#fff] border-[0.063rem] border-[#FF3D9A] w-[11.25rem] h-[3.5rem] cursor-pointer"
             >
@@ -90,6 +93,7 @@ const snackbarStore = useSnackbarStore()
 const saveBtnLoading = ref(false)
 const isPageLoading = ref(true)
 const isCheckOn = ref(false)
+const route = useRoute()
 const form = ref<Form>({
   city: {
     value: '',
@@ -189,12 +193,18 @@ const updateLocationInfo = async () => {
       text: 'Location Info has been updated successfully',
       type: 'success'
     })
-    navigateTo({ name: 'vendor-form-photos___en' })
+    if (route.name === 'vendor-form-location___en')
+      navigateTo({ name: 'vendor-form-photos___en' })
+    else {
+      emits('tabChange', 'photos')
+    }
   } catch (e) {
   } finally {
     saveBtnLoading.value = false
   }
 }
+
+const emits = defineEmits(['tabChange'])
 
 const onSubmit = () => {
   isCheckOn.value = true
@@ -259,7 +269,9 @@ const setLocationData = async () => {
 
 onMounted(() => {
   setTimeout(() => {
-    setLocationData()
+    nextTick(() => {
+      setLocationData()
+    })
   })
 })
 </script>

@@ -3,7 +3,7 @@
     <Header @toggle-drawer="toggleDrawer" />
     <Drawer :is-drawer-open="isDrawerOpen" />
     <AtomsSnackbar />
-    <NuxtPage :class="{ 'ml-[15.125rem]': isDrawerOpen }" />
+    <NuxtPage class="mt-[4rem]" :class="{ 'ml-[15.125rem]': isDrawerOpen }" />
   </div>
 </template>
 <script setup lang="ts">

@@ -64,8 +64,8 @@
             <div>
               <div class="bg-[#F9F9FA] p-[1rem] rounded-xl">
                 <p class="text-[#2A2F4F] text-[1rem] leading-6">
-                  Lead notifications and updates from Hitched will be sent to
-                  this email address.
+                  Lead notifications and updates from Event Guiders will be sent
+                  to this email address.
                 </p>
               </div>
               <div
@@ -87,7 +87,10 @@
           <div
             class="flex flex-col sm:flex-row justify-center gap-x-[1.5rem] gap-y-[0.5rem] sm:gap-y-0 mx-auto"
           >
-            <NuxtLink to="/en/vendor">
+            <NuxtLink
+              v-if="route.name === 'vendor-form-business-information___en'"
+              to="/en/vendor"
+            >
               <button
                 class="rounded-[2rem] bg-[#fff] border-[0.063rem] border-[#FF3D9A] w-[11.25rem] h-[3.5rem] cursor-pointer"
               >
@@ -144,6 +147,8 @@ interface FormField {
 interface Form {
   [key: string]: FormField
 }
+
+const route = useRoute()
 
 const form = ref<Form>({
   username: {
@@ -262,7 +267,7 @@ const validateForm = () => {
     return
   }
   for (const key in form.value) {
-    if (form.value?.[key]?.props?.required || form.value?.[key]?.value.length) {
+    if (form.value?.[key]?.props?.required || form.value?.[key]?.value) {
       form.value[key].props.error = checkFormVal(key)
     } else {
       form.value[key].props.error = ''
@@ -333,12 +338,18 @@ const updateBusinessInfo = async () => {
       text: 'Bussiness Info has been updated successfully',
       type: 'success'
     })
-    navigateTo({ name: 'vendor-form-location___en' })
+    if (route.name === 'vendor-form-business-information___en')
+      navigateTo({ name: 'vendor-form-location___en' })
+    else {
+      emits('tabChange', 'location')
+    }
   } catch (e) {
   } finally {
     saveBtnLoading.value = false
   }
 }
+
+const emits = defineEmits(['tabChange'])
 
 const isPageLoading = ref(true)
 const isValidForm = computed(() => {
@@ -392,6 +403,8 @@ const setBusniessInfoData = async () => {
 }
 
 onMounted(() => {
-  setBusniessInfoData()
+  nextTick(() => {
+    setBusniessInfoData()
+  })
 })
 </script>

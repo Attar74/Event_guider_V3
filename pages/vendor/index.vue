@@ -48,6 +48,7 @@
 </template>
 
 <script setup lang="ts">
+import approved from '~/middleware/approved'
 import { getSteps } from '~/constants/registerationSteps'
 import registerationCard from '~/components/cards/registerationCard.vue'
 import { useUserStore } from '~/store/user'
@@ -58,6 +59,7 @@ const { profileCompleted } = user.venue
 const steps = getSteps()
 definePageMeta({
   layout: 'vendor',
-  requiresAuth: true
+  requiresAuth: true,
+  middleware: approved
 })
 </script>
