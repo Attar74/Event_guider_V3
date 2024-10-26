@@ -2,7 +2,7 @@
   <div>
     <Header />
     <AtomsSnackbar />
-    <NuxtPage />
+    <NuxtPage class="mt-[8rem]" />
     <Footer />
   </div>
 </template>

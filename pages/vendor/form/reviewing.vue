@@ -56,10 +56,14 @@ import {
   differenceInSeconds
 } from 'date-fns'
 import SVGIcon from '~/helper/SVGIcon.vue'
+import approved from '~/middleware/approved'
+import stepsCompleted from '~/middleware/stepsCompleted'
 import { useUserStore } from '~/store/user'
 
 definePageMeta({
-  layout: 'vendor'
+  layout: 'vendor',
+  requiresAuth: true,
+  middleware: [approved, stepsCompleted]
 })
 
 const userStore = useUserStore()

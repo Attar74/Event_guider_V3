@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="fixed w-full z-50 top-0">
     <nav
       class="bg-white border-gray-200 px-4 lg:px-6 border-b-[#D4D5DC] border-[1px]"
     >

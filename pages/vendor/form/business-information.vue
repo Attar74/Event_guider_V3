@@ -24,9 +24,12 @@
 </template>
 <script setup lang="ts">
 import SVGIcon from '~/helper/SVGIcon.vue'
+import approved from '~/middleware/approved'
 import busniessInfo from '~/components/apply/businessInfo.vue'
 
 definePageMeta({
-  layout: 'vendor'
+  layout: 'vendor',
+  requiresAuth: true,
+  middleware: approved
 })
 </script>
