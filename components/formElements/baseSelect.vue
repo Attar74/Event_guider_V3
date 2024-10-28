@@ -22,7 +22,6 @@
       track-by="name"
       label="name"
     />
-
     <div
       v-if="error.length"
       class="text-[#cc0000] mx-[1rem] text-[0.875rem] md:text-[1rem] my-[0.75rem]"
@@ -38,12 +37,8 @@ import Multiselect from '@vueform/multiselect'
 import type { PropType } from 'vue'
 
 interface option {
-  value: string
-  name: string
-}
-
-interface Option {
-  [key: string]: option // Replace 'any' with a more specific type based on the actual option structure
+  value: string | number
+  name: string | number
 }
 
 const props = defineProps({
@@ -56,7 +51,7 @@ const props = defineProps({
     default: () => {
       return []
     },
-    type: Array as PropType<Option[]>
+    type: Array as PropType<option[]>
   },
   placeholder: {
     type: String,
@@ -79,7 +74,7 @@ const props = defineProps({
     default: false
   },
   value: {
-    type: String,
+    type: [String, Number],
     default: ''
   }
 })
@@ -93,6 +88,12 @@ const inputVal = ref<string | number>(props.value) // Use more specific type if 
 watch(inputVal, newValue => {
   emits('updateInput', newValue)
 })
+watch(
+  () => props.value, // Watch the 'value' prop
+  newValue => {
+    inputVal.value = newValue
+  }
+)
 </script>
 <style>
 /* Overrides for Vue Multiselect */
@@ -154,5 +155,14 @@ watch(inputVal, newValue => {
 }
 .multiselect-option.is-pointed:not(.is-selected):hover {
   background-color: #ff3d9a0d;
+}
+
+.multiselect-spinner {
+  /* Adjust the size of the spinner */
+  width: 30px;
+  height: 30px;
+
+  /* Change the color */
+  background-color: #ff4081;
 }
 </style>
