@@ -4,13 +4,9 @@
       class="bg-white border-0 lg:px-6 border-b-[#D4D5DC] rounded-b-xl p-[1.5rem]"
     >
       <div
-        class="flex flex-wrap items-center justify-between mx-auto p-4 md:py-[0.75rem] md:px-[5rem] w-full"
+        class="flex flex-wrap items-center justify-between mx-auto p-4 md:py-[0.75rem] w-full"
       >
-        <div
-          v-for="tab in filteredTabs"
-          :key="tab.title"
-          class="flex mx-[1rem]"
-        >
+        <div v-for="tab in filteredTabs" :key="tab.title" class="flex">
           <button
             class="flex gap-x-[0.5rem] px-[1rem]"
             :class="
@@ -23,7 +19,7 @@
             <SVGIcon
               v-if="tab.component === props.activeTab"
               class="my-auto"
-              :icon="tab.activeIcon"
+              :icon="`active-${tab.icon}`"
             />
             <SVGIcon v-else class="my-auto" :icon="tab.icon" />
             <p
@@ -50,28 +46,24 @@ const tabs = [
   {
     title: 'Business info',
     icon: 'businessInfo',
-    activeIcon: 'active-businessInfo',
     parent: 'storefront',
     component: 'businessInfo'
   },
   {
     title: 'Location',
     icon: 'locationMap',
-    activeIcon: 'active-locationMap',
     parent: 'storefront',
     component: 'location'
   },
   {
     title: 'Photos',
     icon: 'photos',
-    activeIcon: 'active-photos',
     parent: 'storefront',
     component: 'photos'
   },
   {
     title: 'Questions',
     icon: 'question',
-    activeIcon: 'active-question',
     parent: 'storefront',
     component: 'questions'
   },
@@ -85,7 +77,7 @@ const tabs = [
     title: 'Suppliers',
     icon: 'suppliers',
     parent: 'storefront',
-    component: ''
+    component: 'suppliers'
   },
   {
     title: 'Social Networks',

@@ -25,6 +25,9 @@ const components = {
   photos: defineAsyncComponent(() => import('~/components/apply/photos.vue')),
   questions: defineAsyncComponent(
     () => import('~/components/storeFront/questions.vue')
+  ),
+  suppliers: defineAsyncComponent(
+    () => import('~/components/storeFront/suppliers.vue')
   )
   // Add other components as needed
   // anotherTab: defineAsyncComponent(() => import('~/components/apply/anotherTab.vue')),
