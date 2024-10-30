@@ -1,11 +1,10 @@
 <template>
   <div class="mx-auto px-[1rem] md:px-[4rem] mt-[2.5rem] mb-[10rem]">
     <HorizntalTabs :active-tab="activeComponentKey" @tab-change="changeTab" />
-    <component :is="activeTab" @tab-change="changeTab" />
+    <component :is="activeTab" />
   </div>
 </template>
 <script setup lang="ts">
-import SocialNetworks from '~/components/storeFront/socialNetworks.vue'
 import HorizntalTabs from '~/components/ui/horizntalTabs.vue'
 import reviewing from '~/middleware/reviewing'
 
