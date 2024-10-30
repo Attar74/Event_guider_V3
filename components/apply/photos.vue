@@ -181,7 +181,6 @@ interface ApiResponse {
 }
 
 const route = useRoute()
-const emits = defineEmits(['tabChange'])
 
 const uploadPhotos = async () => {
   saveBtnLoading.value = true
