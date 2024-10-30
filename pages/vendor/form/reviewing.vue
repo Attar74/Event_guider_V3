@@ -68,7 +68,7 @@ definePageMeta({
 
 const userStore = useUserStore()
 const { user } = userStore
-const { profileCompletedAt } = user.venue
+const { profileCompletedAt = new Date() } = user.venue
 
 const datesItem = computed(() => {
   return [

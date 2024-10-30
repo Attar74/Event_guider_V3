@@ -108,7 +108,11 @@
                 v-if="!saveBtnLoading"
                 class="text-[#fff] text[1rem] leading-7 font-bold"
               >
-                Save & continue
+                {{
+                  route.name === 'vendor-form-business-information___en'
+                    ? 'Save & continue'
+                    : 'Save'
+                }}
               </p>
               <SVGIcon v-else icon="circularLoader" />
             </button>
@@ -340,16 +344,11 @@ const updateBusinessInfo = async () => {
     })
     if (route.name === 'vendor-form-business-information___en')
       navigateTo({ name: 'vendor-form-location___en' })
-    else {
-      emits('tabChange', 'location')
-    }
   } catch (e) {
   } finally {
     saveBtnLoading.value = false
   }
 }
-
-const emits = defineEmits(['tabChange'])
 
 const isPageLoading = ref(true)
 const isValidForm = computed(() => {

@@ -55,7 +55,8 @@ import { useUserStore } from '~/store/user'
 
 const userStore = useUserStore()
 const { user } = userStore
-const { profileCompleted } = user.venue
+const profileCompleted =
+  user && user.venue ? user.venue.profileCompleted : false
 const steps = getSteps()
 definePageMeta({
   layout: 'vendor',

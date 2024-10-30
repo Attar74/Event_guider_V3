@@ -3,118 +3,115 @@
     class="mx-auto px-[1rem] md:px-[4rem] mt-[2.5rem] mb-[10rem]"
     :class="{ 'max-w-[75rem]': true }"
   >
-    <div>
-      <form @submit.prevent="onSubmit">
-        <div class="my-[2.5rem]">
-          <p
-            class="text-[1.25rem] text-[#2A2F4F] font-semibold leading-9 mb-[0.5rem]"
-          >
-            Preferred suppliers
+    <form class="my-[2.5rem]" @submit.prevent="onSubmit">
+      <p
+        class="text-[1.25rem] text-[#2A2F4F] font-semibold leading-9 mb-[0.5rem]"
+      >
+        Preferred suppliers
+      </p>
+      <div
+        class="w-full h-full shadow-lg p-[1rem] sm:p-[1.5rem] rounded-2xl bg-[#fff] mx-auto overflow-visible"
+      >
+        <div class="bg-[#F9F9FA] rounded-[0.75rem] p-[1rem]">
+          <p class="text-[#2A2F4F] text-[1rem] font-[600] leading-7">
+            Add wedding professionals you frequently work with and recommend to
+            couples.
           </p>
-          <div
-            class="w-full h-full shadow-lg p-[1rem] sm:p-[1.5rem] rounded-2xl bg-[#fff] mx-auto overflow-visible"
-          >
-            <div class="bg-[#F9F9FA] rounded-[0.75rem] p-[1rem]">
-              <p class="text-[#2A2F4F] text-[1rem] font-[600] leading-7">
-                Add wedding professionals you frequently work with and recommend
-                to couples.
-              </p>
-              <p class="text-[1rem] text-[#2A2F4F] font-normal leading-7">
-                Your Preferred Suppliers will be displayed on your storefront.
-              </p>
-            </div>
-            <div class="flex justify-start gap-x-[1rem]">
-              <div class="w-full my-auto">
-                <div v-for="(value, key) in form" :key="key">
-                  <baseSelect
-                    v-bind="value.props"
-                    :value="value.value"
-                    @update-input="form.supplierUuid.value = $event"
-                  />
-                </div>
-              </div>
-              <div class="mb-auto">
-                <button
-                  type="submit"
-                  :disabled="isAddingBtnLoading"
-                  class="mt-[2.75rem] rounded-[2rem] bg-[#FF3D9A] border-[0.063rem] border-[#FF3D9A] w-[11.25rem] h-[3.5rem] cursor-pointer disabled:border-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[#AAACB9]"
-                >
-                  <p
-                    v-if="!isAddingBtnLoading"
-                    class="text-[#fff] text-[1rem] leading-7 font-bold"
-                  >
-                    Add Supplier
-                  </p>
-                  <SVGIcon v-else icon="circularLoader" />
-                </button>
-              </div>
+          <p class="text-[1rem] text-[#2A2F4F] font-normal leading-7">
+            Your Preferred Suppliers will be displayed on your storefront.
+          </p>
+        </div>
+        <div class="sm:flex md:block lg:flex justify-start gap-x-[1rem]">
+          <div class="w-full my-auto">
+            <div v-for="(value, key) in form" :key="key">
+              <baseSelect
+                v-bind="value.props"
+                :value="value.value"
+                @update-input="form.supplierUuid.value = $event"
+              />
             </div>
           </div>
-        </div>
-      </form>
-      <div>
-        <Loader v-if="isPageLoading && !mySuppliers.length" class="mt-[2rem]" />
-        <div v-else>
-          <transition-group name="fade" tag="div" class="space-y-4">
-            <div
-              v-for="supplier in mySuppliers"
-              :key="supplier.id"
-              class="mt-[2rem]"
+          <div class="mb-auto flex justify-center">
+            <button
+              type="submit"
+              :disabled="isAddingBtnLoading"
+              class="mt-[2.75rem] rounded-[2rem] bg-[#FF3D9A] border-[0.063rem] border-[#FF3D9A] w-[11.25rem] h-[3.5rem] cursor-pointer disabled:border-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[#AAACB9]"
             >
-              <div
-                class="flex gap-x-[1rem] w-full h-full overflow-hidden sm:p-[1.5rem] rounded-[0.75rem] mx-auto border-[0.063rem] border-[#ff3d9a1a] bg-[#ff3d9a08]"
+              <p
+                v-if="!isAddingBtnLoading"
+                class="text-[#fff] text-[1rem] leading-7 font-bold"
               >
-                <div
-                  class="bg-no-repeat bg-contain bg-[url(@/public/assets/solidSquareBg.png)] p-[2rem] w-[5.5rem] h-[5.5rem]"
-                />
-                <div class="w-full">
-                  <div class="flex justify-between w-full">
-                    <div class="flex gap-x-[1rem]">
-                      <p
-                        class="text-[#2A2F4F] text-[1rem] font-bold leading-9 capitalize my-auto"
-                      >
-                        {{ supplier.name }}
-                      </p>
-                      <div class="my-auto flex gap-x-[0.5rem]">
-                        <div class="flex my-auto gap-x-[0.063rem]">
-                          <SVGIcon
-                            v-for="i in Math.floor(supplier.stars)"
-                            :key="i"
-                            icon="starIcon"
-                            class="my-auto"
-                          />
-                          <SVGIcon
-                            v-for="i in getNumberOfHalfStars(supplier.stars)"
-                            :key="i"
-                            icon="halfStarIcon"
-                            class="my-auto"
-                          />
-                        </div>
-                        <p
-                          class="text-[#2A2F4F] text-[0.875rem] leading-6 font-bold my-auto"
-                        >
-                          {{ supplier.stars }}
-                        </p>
-                      </div>
-                    </div>
-
-                    <button class="flex gap-x-[1rem] my-auto">
+                Add Supplier
+              </p>
+              <SVGIcon v-else icon="circularLoader" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="mt-[2rem]">
+      <Loader v-if="isPageLoading && !mySuppliers.length" />
+      <div v-else>
+        <transition-group name="fade" tag="div" class="space-y-4">
+          <div
+            v-for="supplier in mySuppliers"
+            :key="supplier.id"
+            class="flex gap-x-[1rem] w-full h-full overflow-hidden sm:p-[1.5rem] rounded-[0.75rem] mx-auto border-[0.063rem] border-[#ff3d9a1a] bg-[#ff3d9a08] p-2 md:p-6"
+            :class="{ 'opacity-50': deletedSupplierId === supplier.id }"
+          >
+            <div
+              class="bg-no-repeat bg-contain bg-[url(@/public/assets/solidSquareBg.png)] p-[2rem] w-[5.5rem] h-[5.5rem]"
+            />
+            <div class="w-full">
+              <div class="flex justify-between w-full">
+                <div class="flex gap-x-[1rem]">
+                  <p
+                    class="text-[#2A2F4F] text-[1rem] font-bold leading-9 capitalize my-auto"
+                  >
+                    {{ supplier.name }}
+                  </p>
+                  <div class="my-auto flex gap-x-[0.5rem]">
+                    <div class="flex my-auto gap-x-[0.063rem]">
                       <SVGIcon
-                        icon="trashIcon"
-                        @click="deleteSupplier(supplier.id)"
+                        v-for="i in Math.floor(supplier.stars)"
+                        :key="i"
+                        icon="starIcon"
+                        class="my-auto"
                       />
-                    </button>
-                  </div>
-                  <div class="mt-[0.5rem]">
-                    <p class="text-[#555972] text-[1rem] leading-7 font-medium">
-                      {{ supplier.subCategoryDisplayName }}
+                      <SVGIcon
+                        v-for="i in getNumberOfHalfStars(supplier.stars)"
+                        :key="i"
+                        icon="halfStarIcon"
+                        class="my-auto"
+                      />
+                    </div>
+                    <p
+                      class="text-[#2A2F4F] text-[0.875rem] leading-6 font-bold my-auto"
+                    >
+                      {{ supplier.stars }}
                     </p>
                   </div>
                 </div>
+
+                <button
+                  class="flex gap-x-[1rem] my-auto"
+                  @click="deleteSupplier(supplier.id)"
+                >
+                  <SVGIcon
+                    v-if="deletedSupplierId !== supplier.id"
+                    icon="trashIcon"
+                  />
+                  <SVGIcon v-else icon="circularLoader" />
+                </button>
+              </div>
+              <div class="mt-[0.5rem]">
+                <p class="text-[#555972] text-[1rem] leading-7 font-medium">
+                  {{ supplier.subCategoryDisplayName }}
+                </p>
               </div>
             </div>
-          </transition-group>
-        </div>
+          </div>
+        </transition-group>
       </div>
     </div>
   </div>
@@ -129,7 +126,7 @@ interface Supplier {
   id: string | number
   name: string | number
   stars: number
-  subCategoryDisplayName: string
+  subCategoryDisplayName: string | number
 }
 
 const mySuppliers = ref<Supplier[]>([])
@@ -214,6 +211,7 @@ const getAllAvaliableSuppliers = async () => {
 }
 
 const isPageLoading = ref(true)
+const deletedSupplierId = ref<string | number>('')
 
 const getAllCurrentSuppliers = async () => {
   isPageLoading.value = true
@@ -333,6 +331,8 @@ const addSupplier = async () => {
 }
 
 const deleteSupplier = async (uuid: string | number) => {
+  deletedSupplierId.value = uuid
+
   try {
     const { status } = await useAPI<ApiResponse>(
       `/vendors/my/suppliers/${uuid}`,

@@ -53,7 +53,11 @@
             class="rounded-[2rem] bg-[#FF3D9A] w-[11.25rem] border-[0.063rem] border-[#FF3D9A] h-[3.5rem] cursor-pointer"
           >
             <p class="text-[#fff] text[1rem] leading-7 font-bold">
-              Save & continue
+              {{
+                route.name === 'vendor-form-location___en'
+                  ? 'Save & continue'
+                  : 'Save'
+              }}
             </p>
           </button>
         </div>
@@ -195,16 +199,11 @@ const updateLocationInfo = async () => {
     })
     if (route.name === 'vendor-form-location___en')
       navigateTo({ name: 'vendor-form-photos___en' })
-    else {
-      emits('tabChange', 'photos')
-    }
   } catch (e) {
   } finally {
     saveBtnLoading.value = false
   }
 }
-
-const emits = defineEmits(['tabChange'])
 
 const onSubmit = () => {
   isCheckOn.value = true
