@@ -36,10 +36,11 @@ interface User {
 }
 
 interface dynamicData {
-  addressCompleted?: boolean
-  photosCompleted?: boolean
-  profileCompleted?: boolean
-  profileCompletedAt?: string
+  businessInfoCompleted?: boolean | string | number
+  addressCompleted?: boolean | string | number
+  photosCompleted?: boolean | string | number
+  profileCompleted?: boolean | string | number
+  profileCompletedAt?: string | boolean | number
 }
 
 interface AuthTokens {

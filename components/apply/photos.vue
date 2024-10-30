@@ -197,7 +197,14 @@ const uploadPhotos = async () => {
   if (!imagesToBeSend.value.length) {
     if (route.name === 'vendor-form-photos___en')
       navigateTo({ name: 'vendor-form-reviewing___en' })
-    else emits('tabChange', 'questions')
+    else {
+      snackbarStore.fireSnack({
+        isVisible: true,
+        text: 'You did not upload any photos',
+        type: 'error'
+      })
+    }
+    saveBtnLoading.value = false
     return
   }
   const formData = new FormData()
@@ -229,7 +236,8 @@ const uploadPhotos = async () => {
       text: `${imagesToBeSend.value.length} image(s) uploaded successfully!`,
       type: 'success'
     })
-    navigateTo({ name: 'vendor-form-reviewing___en' })
+    if (route.name === 'vendor-form-photos___en')
+      navigateTo({ name: 'vendor-form-reviewing___en' })
   } catch {
   } finally {
     imagesToBeSend.value = []

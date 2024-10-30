@@ -5,6 +5,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import SocialNetworks from '~/components/storeFront/socialNetworks.vue'
 import HorizntalTabs from '~/components/ui/horizntalTabs.vue'
 import reviewing from '~/middleware/reviewing'
 
@@ -28,6 +29,9 @@ const components = {
   ),
   suppliers: defineAsyncComponent(
     () => import('~/components/storeFront/suppliers.vue')
+  ),
+  socialNetworks: defineAsyncComponent(
+    () => import('~/components/storeFront/socialNetworks.vue')
   )
   // Add other components as needed
   // anotherTab: defineAsyncComponent(() => import('~/components/apply/anotherTab.vue')),

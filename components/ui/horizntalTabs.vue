@@ -4,7 +4,7 @@
       class="bg-white border-0 lg:px-6 border-b-[#D4D5DC] rounded-b-xl p-[1.5rem]"
     >
       <div
-        class="flex flex-wrap items-center justify-between mx-auto p-4 md:py-[0.75rem] w-full"
+        class="flex flex-wrap items-center justify-between mx-auto px-[3%] p-y4 md:py-[0.75rem] w-full"
       >
         <div v-for="tab in filteredTabs" :key="tab.title" class="flex">
           <button
@@ -67,12 +67,12 @@ const tabs = [
     parent: 'storefront',
     component: 'questions'
   },
-  {
-    title: 'Deals',
-    icon: 'deals',
-    parent: 'storefront',
-    component: ''
-  },
+  // {
+  //   title: 'Deals',
+  //   icon: 'deals',
+  //   parent: 'storefront',
+  //   component: ''
+  // },
   {
     title: 'Suppliers',
     icon: 'suppliers',
@@ -83,7 +83,7 @@ const tabs = [
     title: 'Social Networks',
     icon: 'socialNetwork',
     parent: 'storefront',
-    component: ''
+    component: 'socialNetworks'
   },
 
   {

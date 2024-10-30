@@ -273,9 +273,14 @@ const login = async () => {
       if (userData) {
         userStore.setUser(user)
         userStore.setTokens({ accessToken, refreshToken })
-        user.venue.applicationStatus === 'Approved'
-          ? router.push({ name: 'vendor-home-main-dashboard___en' })
-          : router.push({ name: 'vendor___en' })
+        if (
+          user?.venue?.applicationStatus &&
+          user.venue.applicationStatus === 'Approved'
+        ) {
+          router.push({ name: 'vendor-home-main-dashboard___en' })
+        } else {
+          router.push({ name: 'vendor___en' })
+        }
       }
     }
   } catch (error) {
