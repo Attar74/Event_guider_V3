@@ -213,7 +213,7 @@ const DrawerOptions = ref([
   {
     name: 'Faq’s',
     icon: 'faq',
-    path: 'Faq’s'
+    path: 'faq'
   },
   {
     name: 'Notification',

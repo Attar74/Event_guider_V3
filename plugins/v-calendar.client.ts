@@ -1,0 +1,8 @@
+import { defineNuxtPlugin } from '#app'
+import VCalendar from 'v-calendar'
+
+export default defineNuxtPlugin(nuxtApp => {
+  nuxtApp.vueApp.use(VCalendar, {
+    componentPrefix: 'v' // Optional: set a prefix like 'v'
+  })
+})

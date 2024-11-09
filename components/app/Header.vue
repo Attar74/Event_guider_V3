@@ -185,10 +185,11 @@ const switchBtn = ref(false)
 const mobileMenuOpen = ref(false)
 const isDrawer = ref(true)
 const route = useRoute()
+const router = useRouter()
 
 const handleLogout = () => {
   userStore.clearUser()
-  navigateTo('/')
+  router.push({ name: 'index___en' })
 }
 
 const emits = defineEmits(['toggle-drawer'])

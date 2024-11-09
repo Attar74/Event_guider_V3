@@ -29,10 +29,10 @@ interface User {
   state: string
   name: string
   email: string
-  userType: string
   username: string
   uuid: string
   venue: Venue
+  userType: string
 }
 
 interface dynamicData {

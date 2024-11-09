@@ -3,10 +3,10 @@
     <label
       v-if="label"
       :for="name"
-      class="flex text-[#2A2F4F] text-[0.75rem] lg:text-[0.875rem] mb-[0.25rem] ml-[1rem] font-bold"
+      class="flex text-[#2A2F4F] text-[0.75rem] lg:text-[0.875rem] mb-[0.25rem] ml-[1rem] font-bold gap-x-1"
     >
       <p>{{ label }}</p>
-      <span v-if="required">*</span>
+      <span v-if="required" class="text-[#FF3D9A]">*</span>
     </label>
     <div class="relative">
       <div
