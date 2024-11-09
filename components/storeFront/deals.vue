@@ -491,7 +491,7 @@ const discountform = ref<Form>({
   ratio: {
     value: '',
     props: {
-      type: 'number ',
+      type: 'number',
       placeholder: 'Choose discount ratio',
       label: 'Discount ratio',
       name: 'ratio',
