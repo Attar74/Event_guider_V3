@@ -245,7 +245,6 @@ interface User {
   username: string
   uuid: string
   venue: Venue
-  userType: string
 }
 
 interface ApiResponse {
