@@ -33,6 +33,7 @@ interface User {
   username: string
   uuid: string
   venue: Venue
+  userType: string
 }
 
 interface dynamicData {
@@ -62,6 +63,7 @@ export const useUserStore = defineStore('user', {
       userType: '',
       username: '',
       uuid: '',
+      userType: '',
       venue: {
         addressCompleted: false,
         applicationStatus: '',
@@ -124,6 +126,7 @@ export const useUserStore = defineStore('user', {
         userType: '',
         username: '',
         uuid: '',
+        userType: '',
         venue: {
           addressCompleted: false,
           applicationStatus: '',

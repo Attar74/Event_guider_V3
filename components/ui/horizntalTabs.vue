@@ -4,7 +4,7 @@
       class="bg-white border-0 lg:px-6 border-b-[#D4D5DC] rounded-b-xl p-[1.5rem]"
     >
       <div
-        class="flex flex-wrap items-center justify-between mx-auto px-[3%] p-y4 md:py-[0.75rem] w-full"
+        class="flex flex-wrap items-center justify-start mx-auto px-[3%] py-4 md:py-[0.75rem] w-full gap-x-10"
       >
         <div v-for="tab in filteredTabs" :key="tab.title" class="flex">
           <button
@@ -67,12 +67,12 @@ const tabs = [
     parent: 'storefront',
     component: 'questions'
   },
-  // {
-  //   title: 'Deals',
-  //   icon: 'deals',
-  //   parent: 'storefront',
-  //   component: ''
-  // },
+  {
+    title: 'Deals',
+    icon: 'deals',
+    parent: 'storefront',
+    component: 'deals'
+  },
   {
     title: 'Suppliers',
     icon: 'suppliers',
@@ -90,19 +90,19 @@ const tabs = [
     title: 'Published Faq’s',
     icon: 'publishedFaqs',
     parent: 'faq',
-    component: ''
+    component: 'Published'
   },
   {
     title: 'Users Faq’s',
     icon: 'usersFaqs',
     parent: 'faq',
-    component: ''
+    component: 'Users'
   },
   {
     title: 'Archived Faq’s',
     icon: 'archivedFaqs',
     parent: 'faq',
-    component: ''
+    component: 'Archived'
   }
 ]
 const props = defineProps({
