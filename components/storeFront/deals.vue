@@ -34,12 +34,21 @@
                   :key="discount.uuid"
                   class="w-full h-full overflow-hidden sm:p-[1.5rem] rounded-[0.75rem] mx-auto border-[0.063rem] border-[#ff3d9a08] bg-[#ff3d9a08]"
                 >
-                  <div class="flex justify-end gap-x-[1rem]">
+                  <div
+                    class="flex justify-end gap-x-[1rem]"
+                    :class="{
+                      'opacity-50': deletedDiscountId === discount.uuid
+                    }"
+                  >
                     <button @click="editDiscount(discount)">
                       <SVGIcon icon="edit" />
                     </button>
                     <button @click="deleteDiscount(discount.uuid)">
-                      <SVGIcon icon="delete" />
+                      <SVGIcon
+                        v-if="deletedDiscountId !== discount.uuid"
+                        icon="delete"
+                      />
+                      <SVGIcon v-else icon="circularLoader" />
                     </button>
                   </div>
                   <table class="table-auto w-full">
@@ -236,6 +245,7 @@
                 v-for="deal in Deals"
                 :key="deal.uuid"
                 class="flex flex-col my-[2rem]"
+                :class="{ 'opacity-50': deletedDealId === deal.uuid }"
               >
                 <div
                   class="flex gap-x-[1rem] w-full h-full sm:p-[1.5rem] rounded-[0.75rem] mx-auto border-[0.063rem] border-[#ff3d9a1a] bg-[#ff3d9a08]"
@@ -258,7 +268,11 @@
                           <SVGIcon icon="edit" />
                         </button>
                         <button @click="deleteDeal(deal.uuid)">
-                          <SVGIcon icon="delete" />
+                          <SVGIcon
+                            v-if="deletedDealId !== deal.uuid"
+                            icon="delete"
+                          />
+                          <SVGIcon v-else icon="circularLoader" />
                         </button>
                       </div>
                     </div>
@@ -593,7 +607,8 @@ const isDealingDataInProgress = ref(true)
 const isDiscountDataInProgress = ref(true)
 const isCheckOn = ref(false)
 const saveDealBtnLoading = ref(false)
-
+const deletedDealId = ref('')
+const deletedDiscountId = ref('')
 /*********************************** Deals Logic************************************/
 
 const handleFileChange = async (event: Event) => {
@@ -764,6 +779,7 @@ const createDeal = async () => {
 }
 
 const deleteDeal = async (uuid: string) => {
+  deletedDealId.value = uuid
   try {
     const { status } = await useAPI(`/vendors/my/deals/${uuid}`, {
       method: 'DELETE'
@@ -782,13 +798,24 @@ const deleteDeal = async (uuid: string) => {
       type: 'success'
     })
     Deals.value = Deals.value.filter(item => item.uuid !== uuid)
-  } catch (e) {}
+  } catch (e) {
+  } finally {
+    deletedDealId.value = ''
+  }
 }
+
+const queryDealsParams = computed(() => {
+  return {
+    ...(isVendor.value && {
+      venueUuid: userStore.user?.venue?.uuid
+    })
+  }
+})
 
 const getDeals = async () => {
   try {
     const { data, status } = await useAPI<ApiDealResponse>(
-      `/vendors/my/deals?venueUuid=${userStore.user?.venue?.uuid}`,
+      `/vendors/my/deals${buildQueryString(queryDealsParams.value)}`,
       {
         method: 'GET'
       }
@@ -937,6 +964,7 @@ const createDiscount = async () => {
 }
 
 const deleteDiscount = async (uuid: string) => {
+  deletedDiscountId.value = uuid
   try {
     const { status } = await useAPI(`/vendors/my/discounts/${uuid}`, {
       method: 'DELETE'
@@ -955,7 +983,10 @@ const deleteDiscount = async (uuid: string) => {
       type: 'success'
     })
     Discounts.value = Discounts.value.filter(item => item.uuid !== uuid)
-  } catch (e) {}
+  } catch (e) {
+  } finally {
+    deletedDiscountId.value = ''
+  }
 }
 
 const editDiscount = (item: discountItem) => {
@@ -967,10 +998,18 @@ const editDiscount = (item: discountItem) => {
   discountUuid.value = item.uuid
 }
 
+const queryDiscountsParams = computed(() => {
+  return {
+    ...(isVendor.value && {
+      venueUuid: userStore.user?.venue?.uuid
+    })
+  }
+})
+
 const getDiscounts = async () => {
   try {
     const { data, status } = await useAPI<ApiDealResponse>(
-      `/vendors/my/discounts?venueUuid=${userStore.user?.venue?.uuid}`,
+      `/vendors/my/discounts${buildQueryString(queryDiscountsParams.value)}`,
       {
         method: 'GET'
       }
