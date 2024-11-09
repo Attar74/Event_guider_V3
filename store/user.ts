@@ -29,7 +29,6 @@ interface User {
   state: string
   name: string
   email: string
-  userType: string
   username: string
   uuid: string
   venue: Venue
@@ -63,7 +62,6 @@ export const useUserStore = defineStore('user', {
       userType: '',
       username: '',
       uuid: '',
-      userType: '',
       venue: {
         addressCompleted: false,
         applicationStatus: '',
@@ -126,7 +124,6 @@ export const useUserStore = defineStore('user', {
         userType: '',
         username: '',
         uuid: '',
-        userType: '',
         venue: {
           addressCompleted: false,
           applicationStatus: '',
