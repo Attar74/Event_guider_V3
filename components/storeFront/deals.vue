@@ -112,7 +112,12 @@
               </transition-group>
               <transition name="fade">
                 <div
-                  v-if="!AddDiscount && !Discounts.length"
+                  v-if="
+                    isVendor
+                      ? !AddDiscount && !Discounts.length
+                      : discountform.venueUuid.props.options.length >
+                        Discounts.length
+                  "
                   class="flex justify-between mt-[2rem]"
                 >
                   <p
@@ -313,6 +318,13 @@
               <div
                 class="w-full p-[1rem] sm:p-[1.5rem] rounded-2xl bg-[#2a2f4f08] mx-auto grid grid-cols-1 md:grid-cols-1"
               >
+                <div v-if="!isVendor" class="col-span-2 md:col-span-1">
+                  <baseSelect
+                    v-bind="dealsform.VenueUuid.props"
+                    :value="dealsform.VenueUuid.value"
+                    @update-input="dealsform.VenueUuid.value = $event"
+                  />
+                </div>
                 <div class="col-span-2 md:col-span-1">
                   <baseInput
                     v-bind="dealsform.DisplayName.props"
@@ -363,7 +375,7 @@
                     </div>
                   </label>
                   <div v-else>
-                    <button @click="images = []">
+                    <button @click="resetImage">
                       <SVGIcon icon="closeIcon" class="my-auto" />
                     </button>
                     <img
@@ -555,6 +567,19 @@ const dealsform = ref<Form>({
       required: true,
       error: ''
     }
+  },
+  VenueUuid: {
+    value: '',
+    props: {
+      placeholder: 'Choose venue',
+      label: 'Venue',
+      name: 'VenueUuid',
+      classes:
+        'w-full outline-0 text-[0.875rem] md:text-[1rem] text-[#000] block h-[3rem] md:h-[3.5rem] p-2.5 dark:placeholder-[#AAACB9]',
+      required: true,
+      error: '',
+      options: []
+    }
   }
 })
 
@@ -584,6 +609,29 @@ interface discountItem {
   venueTradeName: string
   venueUuid: string
   ratio: number
+}
+
+interface venueItem {
+  addressCompleted: boolean
+  applicationStatus: string
+  businessInfoCompleted: boolean
+  dateCreated: string
+  email: string
+  mobileNumber: string
+  photos: string[]
+  photosCompleted: boolean
+  profileCompleted: boolean
+  rating: number
+  subCategoryDisplayName:
+    | 'Wedding Venue'
+    | 'Private Villa'
+    | 'Boat'
+    | 'Restaurant'
+    | ''
+  subCategoryUuid: string
+  tradeName: string
+  uuid: string
+  profileCompletedAt: string
 }
 
 interface ApiDealResponse {
@@ -672,13 +720,13 @@ const queryParams = computed(() => {
   return {
     ...payload,
     ...(dealUuid.value.length && { dealUuid: dealUuid.value }),
-    VenueUuid: userStore.user?.venue?.uuid
+    VenueUuid: !isVendor.value ? userStore.user?.venue?.uuid : payload.VenueUuid
   }
 })
 
 const isValidForm = computed(() => {
   return (
-    Object.values(dealsform.value).every(
+    !!Object.values(dealsform.value).every(
       ({ props }) => !props?.error?.length
     ) && images.value.length
   )
@@ -705,6 +753,9 @@ watch(
 )
 
 const validateForm = () => {
+  if (isVendor.value || !Deals.value.length) {
+    dealsform.value.VenueUuid.props.required = false
+  }
   if (!isCheckOn.value) {
     return
   }
@@ -765,12 +816,12 @@ const createDeal = async () => {
       dealsform.value[key].value = ''
       dealsform.value[key].props.error = ''
     }
-    images.value = []
+    resetImage()
     isCheckOn.value = false
   } catch {
   } finally {
     imagesToBeSend.value = []
-    images.value = []
+    resetImage()
     isCreatDeal.value = false
     saveDealBtnLoading.value = false
     dealUuid.value = ''
@@ -865,7 +916,12 @@ const CancelDealsForm = () => {
   }
   isCheckOn.value = false
   dealUuid.value = ''
+  resetImage()
+}
+
+const resetImage = () => {
   images.value = []
+  imagesToBeSend.value = []
 }
 
 /*********************************** Discount Logic************************************/
@@ -1062,7 +1118,18 @@ const getVenues = async () => {
       return
     }
     if (Array.isArray(data.value?.data)) {
-      Discounts.value = data.value?.data
+      discountform.value.venueUuid.props.options = data.value?.data.map(V => {
+        return {
+          value: V.uuid,
+          name: V.tradeName
+        }
+      })
+      dealsform.value.VenueUuid.props.options = data.value?.data.map(V => {
+        return {
+          value: V.uuid,
+          name: V.tradeName
+        }
+      })
     }
   } catch (e) {
     snackbarStore.fireSnack({
