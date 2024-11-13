@@ -611,29 +611,6 @@ interface discountItem {
   ratio: number
 }
 
-interface venueItem {
-  addressCompleted: boolean
-  applicationStatus: string
-  businessInfoCompleted: boolean
-  dateCreated: string
-  email: string
-  mobileNumber: string
-  photos: string[]
-  photosCompleted: boolean
-  profileCompleted: boolean
-  rating: number
-  subCategoryDisplayName:
-    | 'Wedding Venue'
-    | 'Private Villa'
-    | 'Boat'
-    | 'Restaurant'
-    | ''
-  subCategoryUuid: string
-  tradeName: string
-  uuid: string
-  profileCompletedAt: string
-}
-
 interface ApiDealResponse {
   data: { deals: dealItem[] }
 }
@@ -720,7 +697,7 @@ const queryParams = computed(() => {
   return {
     ...payload,
     ...(dealUuid.value.length && { dealUuid: dealUuid.value }),
-    VenueUuid: !isVendor.value ? userStore.user?.venue?.uuid : payload.VenueUuid
+    VenueUuid: isVendor.value ? userStore.user?.venue?.uuid : payload.VenueUuid
   }
 })
 
