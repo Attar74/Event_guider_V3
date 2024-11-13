@@ -63,6 +63,12 @@ const emits = defineEmits(['updateInput'])
 watch(inputVal, newValue => {
   emits('updateInput', newValue)
 })
+watch(
+  () => props.value, // Watch the 'value' prop
+  newValue => {
+    inputVal.value = newValue
+  }
+)
 </script>
 <style scopped>
 input[type='number']::-webkit-outer-spin-button,
