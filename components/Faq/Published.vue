@@ -587,7 +587,6 @@ const deleteQuestion = async (uuid: string) => {
 }
 
 const editQuestion = (question: questionItem) => {
-  console.log('🚀 ~ editQuestion ~ question:', question.answerType)
   questionUuid.value = question.uuid
   form.value.answerType.value = question.answerType
   form.value.question.value = question.question
