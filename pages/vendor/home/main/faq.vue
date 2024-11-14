@@ -16,11 +16,11 @@ definePageMeta({
 
 // Define dynamic components
 const components = {
-  Archived: defineAsyncComponent(() => import('~/components/Faq/Archived.vue')),
   Published: defineAsyncComponent(
     () => import('~/components/Faq/Published.vue')
   ),
-  Users: defineAsyncComponent(() => import('~/components/Faq/Users.vue'))
+  Users: defineAsyncComponent(() => import('~/components/Faq/Users.vue')),
+  Archived: defineAsyncComponent(() => import('~/components/Faq/Archived.vue'))
   // Add other components as needed
   // anotherTab: defineAsyncComponent(() => import('~/components/apply/anotherTab.vue')),
 }
