@@ -134,34 +134,6 @@
         </div>
       </form>
     </div>
-    <div v-if="false" class="my-[2rem]">
-      <div
-        class="flex gap-x-[1rem] w-full h-full overflow-hidden sm:p-[1rem] rounded-[0.75rem] mx-auto bg-[#FFF]"
-      >
-        <div class="w-full">
-          <div class="flex justify-between w-full">
-            <div class="flex gap-x-[0.5rem]">
-              <p class="text-[#7F8295] text-[1rem] leading-7 font-bold">01</p>
-              <p class="text-[#2A2F4F] text-[1rem] leading-7 my-auto font-bold">
-                From which price can I hire my Venues ?
-              </p>
-            </div>
-            <div class="flex gap-x-[0.75rem] my-auto">
-              <SVGIcon icon="edit" />
-              <SVGIcon icon="delete" />
-            </div>
-          </div>
-          <div class="mt-[0.75rem]">
-            <p class="text-[#2A2F4F] text-[1rem] leading-7">
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
     <transition-group name="fadeUp" tag="div" class="space-y-4">
       <div v-if="!isQuestionDataInProgress">
         <div
