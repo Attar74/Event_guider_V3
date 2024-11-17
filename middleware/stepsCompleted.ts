@@ -11,10 +11,9 @@ export default defineNuxtRouteMiddleware(async () => {
     await userStore.loadTokensFromLocalStorage()
   } catch {
   } finally {
-    const { applicationStatus, photosCompleted, profileCompleted } =
-      userStore.user.venue
+    const { profileCompleted } = userStore.user.venue
     // If the the account still under reviewing and user trying to acces the dashboard
-    if (!applicationStatus || !photosCompleted || !profileCompleted) {
+    if (!profileCompleted) {
       snackbarStore.fireSnack({
         isVisible: true,
         text: 'Please complete all the steps to continue',

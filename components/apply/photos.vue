@@ -128,7 +128,9 @@
 <script lang="ts" setup>
 import SVGIcon from '~/helper/SVGIcon.vue'
 import { useSnackbarStore } from '~/store/snackbarStore'
+import { useUserStore } from '~/store/user'
 
+const userStore = useUserStore()
 interface imageItem {
   path: string
   uuid: string
@@ -176,8 +178,20 @@ const config = useRuntimeConfig()
 const handleOpenFileInput = () => {
   if (fileInput.value) fileInput.value.click()
 }
+
 interface ApiResponse {
-  data: { photos: imageItem[] }
+  data: {
+    photos: imageItem[]
+  }
+}
+
+interface Item {
+  [key: string]: string | number // Add index signature for dynamic keys
+  // Other known properties
+}
+
+interface ApiResponseUpdate {
+  data: Item
 }
 
 const route = useRoute()
@@ -214,7 +228,7 @@ const uploadPhotos = async () => {
   })
   try {
     // await updateMedia(form);
-    const { status } = await useAPI<ApiResponse>(
+    const { status, data } = await useAPI<ApiResponseUpdate>(
       `/vendors/my/business-photos`,
       {
         method: 'PUT',
@@ -228,6 +242,26 @@ const uploadPhotos = async () => {
         type: 'error'
       })
       return
+    }
+
+    if (data && data.value) {
+      const { data: userData } = data.value
+      const {
+        photosCompleted,
+        profileCompleted,
+        profileCompletedAt,
+        applicationStatus
+      } = userData
+      userStore.UpdateUserData({
+        photosCompleted,
+        profileCompleted,
+        profileCompletedAt,
+        applicationStatus
+      })
+      if (applicationStatus && applicationStatus.toString() === 'Approved') {
+        navigateTo({ name: 'vendor-home-main-dashboard___en' })
+      } else if (route.name === 'vendor-form-business-information___en')
+        navigateTo({ name: 'vendor-form-location___en' })
     }
 
     snackbarStore.fireSnack({
