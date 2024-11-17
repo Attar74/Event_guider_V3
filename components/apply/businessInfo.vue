@@ -132,8 +132,10 @@ import baseInput from '../formElements/baseInput.vue'
 import baseTextArea from '../formElements/baseTextArea.vue'
 import loader from '../ui/loader.vue'
 import { useSnackbarStore } from '~/store/snackbarStore'
+import { useUserStore } from '~/store/user'
 import useWebsiteValidator from '~/composables/useWebsiteValidator'
 
+const userStore = useUserStore()
 const saveBtnLoading = ref(false)
 interface FormField {
   value: string | number
@@ -315,7 +317,6 @@ const formPayload = computed(() => {
 
 interface Item {
   [key: string]: string | number // Add index signature for dynamic keys
-  // Other known properties
 }
 
 interface ApiResponse {
@@ -324,10 +325,13 @@ interface ApiResponse {
 
 const updateBusinessInfo = async () => {
   try {
-    const { status } = await useAPI<ApiResponse>(`/vendors/my/business-info`, {
-      method: 'PUT',
-      body: formPayload.value
-    })
+    const { status, data } = await useAPI<ApiResponse>(
+      `/vendors/my/business-info`,
+      {
+        method: 'PUT',
+        body: formPayload.value
+      }
+    )
 
     if (status.value === 'error') {
       snackbarStore.fireSnack({
@@ -337,13 +341,25 @@ const updateBusinessInfo = async () => {
       })
       return
     }
+    if (data && data.value) {
+      const { data: userData } = data.value
+
+      if (userData) {
+        userStore.UpdateUserData(userData)
+        if (
+          userData?.applicationStatus &&
+          userData?.applicationStatus === 'Approved'
+        ) {
+          navigateTo({ name: 'vendor-home-main-dashboard___en' })
+        } else if (route.name === 'vendor-form-business-information___en')
+          navigateTo({ name: 'vendor-form-location___en' })
+      }
+    }
     snackbarStore.fireSnack({
       isVisible: true,
       text: 'Bussiness Info has been updated successfully',
       type: 'success'
     })
-    if (route.name === 'vendor-form-business-information___en')
-      navigateTo({ name: 'vendor-form-location___en' })
   } catch (e) {
   } finally {
     saveBtnLoading.value = false

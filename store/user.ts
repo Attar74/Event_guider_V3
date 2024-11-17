@@ -41,6 +41,7 @@ interface dynamicData {
   photosCompleted?: boolean | string | number
   profileCompleted?: boolean | string | number
   profileCompletedAt?: string | boolean | number
+  applicationStatus?: string | boolean | number
 }
 
 interface AuthTokens {
@@ -96,7 +97,10 @@ export const useUserStore = defineStore('user', {
 
     // Update user Data information photosCompleted, profileCompleted, profileCompletedAt
     UpdateUserData(dynamicData: dynamicData) {
-      Object.assign(this.user, { ...this.user, ...dynamicData })
+      Object.assign(this.user, {
+        ...this.user,
+        venue: { ...this.user.venue, ...dynamicData }
+      })
       localStorage.setItem('user', JSON.stringify(this.user))
     },
 

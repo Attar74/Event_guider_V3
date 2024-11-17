@@ -74,7 +74,9 @@ import GoogleMap from '../ui/GoogleMap.vue'
 import baseInput from '../formElements/baseInput.vue'
 import loader from '../ui/loader.vue'
 import { useSnackbarStore } from '~/store/snackbarStore'
+import { useUserStore } from '~/store/user'
 
+const userStore = useUserStore()
 interface FormField {
   value: string | number
   props: {
@@ -176,7 +178,7 @@ const formPayload = computed(() => {
 
 const updateLocationInfo = async () => {
   try {
-    const { status } = await useAPI<ApiResponse>(
+    const { status, data } = await useAPI<ApiResponse>(
       `/vendors/my/business-address`,
       {
         method: 'PUT',
@@ -192,13 +194,31 @@ const updateLocationInfo = async () => {
       })
       return
     }
+    if (data && data.value) {
+      const { data: userData } = data.value
+      const { addressCompleted, profileCompleted, profileCompletedAt } =
+        userData
+
+      if (userData) {
+        userStore.UpdateUserData({
+          addressCompleted,
+          profileCompleted,
+          profileCompletedAt
+        })
+        if (
+          userData?.applicationStatus &&
+          userData?.applicationStatus === 'Approved'
+        ) {
+          navigateTo({ name: 'vendor-home-main-dashboard___en' })
+        } else if (route.name === 'vendor-form-location___en')
+          navigateTo({ name: 'vendor-form-photos___en' })
+      }
+    }
     snackbarStore.fireSnack({
       isVisible: true,
       text: 'Location Info has been updated successfully',
       type: 'success'
     })
-    if (route.name === 'vendor-form-location___en')
-      navigateTo({ name: 'vendor-form-photos___en' })
   } catch (e) {
   } finally {
     saveBtnLoading.value = false

@@ -317,6 +317,7 @@ const checkFormVal = (key: string) => {
 }
 
 const router = useRouter()
+
 const isValidForm = computed(() => {
   return Object.values(form.value).every(({ props }) => !props?.error?.length)
 })
@@ -367,7 +368,10 @@ const register = async () => {
       })
       return
     }
-    router.push({ name: 'index___en' })
+    router.push({
+      name: 'auth-confirmEmail___en',
+      query: { email: formPayload.value.email }
+    })
   } catch (error) {
     console.log(error)
   } finally {

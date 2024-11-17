@@ -136,6 +136,7 @@ const checkFormVal = (key: string) => {
 
 const router = useRouter()
 const route = useRoute()
+console.log('🚀 ~ route:', route)
 
 const validateOTP = async () => {
   if (
@@ -145,7 +146,7 @@ const validateOTP = async () => {
     return
   }
   try {
-    const { status } = await useAPI(`/account/validate-otp`, {
+    const { status } = await useAPI(`/account/confirm-email`, {
       method: 'POST',
       body: {
         email: route.query.email,
@@ -160,11 +161,18 @@ const validateOTP = async () => {
       })
       return
     }
-    router.push({
-      name: 'auth-newPassword___en',
-      query: { email: route.query.email }
+    snackbarStore.fireSnack({
+      isVisible: true,
+      text: 'Email Confirmed successfully',
+      type: 'success'
     })
+    router.push({ name: 'index___en' })
   } catch {
+    snackbarStore.fireSnack({
+      isVisible: true,
+      text: 'Something went wrong',
+      type: 'error'
+    })
   } finally {
     isCheckInProgress.value = false
   }

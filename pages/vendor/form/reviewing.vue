@@ -91,17 +91,26 @@ let intervalId: string | number | NodeJS.Timeout | null | undefined = null
 const updateTimeLeft = () => {
   const now = new Date()
   const daysBetween = differenceInDays(
-    add(profileCompletedAt, { days: 4 }),
+    add(profileCompletedAt.toLocaleString(), { days: 4 }),
     now
   )
 
   const hoursBetween =
-    differenceInHours(add(profileCompletedAt, { days: 4 }), now) % 24
+    differenceInHours(
+      add(profileCompletedAt.toLocaleString(), { days: 4 }),
+      now
+    ) % 24
 
   const minutsBetween =
-    differenceInMinutes(add(profileCompletedAt, { days: 4 }), now) % 60
+    differenceInMinutes(
+      add(profileCompletedAt.toLocaleString(), { days: 4 }),
+      now
+    ) % 60
   const secondsBetween =
-    differenceInSeconds(add(profileCompletedAt, { days: 4 }), now) % 60
+    differenceInSeconds(
+      add(profileCompletedAt.toLocaleString(), { days: 4 }),
+      now
+    ) % 60
 
   if (!secondsBetween && !minutsBetween && !hoursBetween && !daysBetween) {
     timeLeft.value = {
