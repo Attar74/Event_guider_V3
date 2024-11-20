@@ -54,7 +54,12 @@
               class="bg-gradient-to-t from-slate-300 to-[#2a2f4f14] h-full rounded-[0.875rem]"
             >
               <button @click="removeImage(image)">
-                <SVGIcon icon="closeIcon" class="my-auto" />
+                <SVGIcon
+                  v-if="deletetImageUuid === image.uuid"
+                  icon="circularLoader"
+                  class="my-auto p-4"
+                />
+                <SVGIcon v-else icon="closeIcon" class="my-auto" />
               </button>
               <div class="m-[0.5rem] flex gap-x-[0.5rem] content-end h-full">
                 <SVGIcon
@@ -117,7 +122,11 @@
             class="my-auto"
           />
           <p v-else class="text-[#fff] text[1rem] leading-7 font-bold">
-            Save & continue
+            {{
+              route.name === 'vendor-form-photos___en'
+                ? 'Save & continue'
+                : 'Save'
+            }}
           </p>
         </button>
       </div>
@@ -244,7 +253,7 @@ const uploadPhotos = async () => {
       return
     }
 
-    if (data && data.value) {
+    if (data && data.value && route.name === 'vendor-form-photos___en') {
       const { data: userData } = data.value
       const {
         photosCompleted,
@@ -258,10 +267,13 @@ const uploadPhotos = async () => {
         profileCompletedAt,
         applicationStatus
       })
-      if (applicationStatus && applicationStatus.toString() === 'Approved') {
-        navigateTo({ name: 'vendor-home-main-dashboard___en' })
-      } else if (route.name === 'vendor-form-business-information___en')
-        navigateTo({ name: 'vendor-form-location___en' })
+
+      navigateTo({
+        name:
+          applicationStatus && applicationStatus.toString() === 'Approved'
+            ? 'vendor-home-main-dashboard___en'
+            : 'vendor-form-reviewing___en'
+      })
     }
 
     snackbarStore.fireSnack({
@@ -269,8 +281,6 @@ const uploadPhotos = async () => {
       text: `${imagesToBeSend.value.length} image(s) uploaded successfully!`,
       type: 'success'
     })
-    if (route.name === 'vendor-form-photos___en')
-      navigateTo({ name: 'vendor-form-reviewing___en' })
   } catch {
   } finally {
     imagesToBeSend.value = []
@@ -278,15 +288,37 @@ const uploadPhotos = async () => {
     setPhotosData()
   }
 }
+
+const deletetImageUuid = ref('')
+
 const removeImage = async (file: imageItem) => {
+  console.log('🚀 ~ removeImage ~ file:', file)
+  if (
+    images.value.length <= 6 &&
+    route.name === 'vendor-home-main-storeFront___en'
+  ) {
+    snackbarStore.fireSnack({
+      isVisible: true,
+      text: 'You should have at least 6 photos',
+      type: 'error'
+    })
+    return
+  }
   if (!file?.isBlob) {
+    deletetImageUuid.value = file.uuid
     try {
       await useAPI<ApiResponse>(`/vendors/my/business-photos/${file.uuid}`, {
         method: 'DELETE'
       })
+      snackbarStore.fireSnack({
+        isVisible: true,
+        text: 'Image has been deleted successfully',
+        type: 'success'
+      })
     } catch (e) {
       console.error(e)
     } finally {
+      deletetImageUuid.value = ''
     }
   }
   images.value = images.value.filter(_file => _file.uuid !== file.uuid)

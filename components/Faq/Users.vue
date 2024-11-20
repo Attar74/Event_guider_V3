@@ -9,6 +9,7 @@
         <FaqUserCard
           v-for="item in questions"
           :key="item.uuid"
+          :question="item"
           :qa-title="item.question"
           :date="questionDateDistance(item.dateCreated)"
           :answer="item.paragraph"
@@ -17,6 +18,7 @@
           :is-delete-in-progress="item.uuid === questionUuid"
           :is-archive-in-progress="item.uuid === questionArchivedUuid"
           :is-copied="item.uuid === copiedQuestionUuid"
+          :is-stared="item.uuid === sratedQuestionUuid"
           show-archive
           show-delete
           show-copy
@@ -24,6 +26,7 @@
           @delete-question="deleteQuestion($event)"
           @toggle-archive-question="archiveQuestion($event)"
           @copy-text="copyText($event)"
+          @starred-question="starredQuestion($event)"
         />
       </transition-group>
     </section>
@@ -50,6 +53,7 @@ const isArchiveInProgress = ref(false)
 const questionUuid = ref('')
 const questionArchivedUuid = ref('')
 const copiedQuestionUuid = ref('')
+const sratedQuestionUuid = ref('')
 
 interface ApiQuestionResponse {
   data: { data: questionItem[] }
@@ -64,6 +68,7 @@ interface questionItem {
   paragraph?: 'string'
   points?: ['string']
   userFullName?: string
+  starred?: boolean
 }
 
 const getUserQuestions = async () => {
@@ -178,6 +183,44 @@ const copyText = async ({
   setTimeout(() => {
     copiedQuestionUuid.value = ''
   }, 2000)
+}
+
+const starredQuestion = async (question: questionItem) => {
+  sratedQuestionUuid.value = question.uuid
+  try {
+    const { status } = await useAPI(
+      `/faqs/my/users/${question.uuid}/star/${!question.starred}`,
+      {
+        method: 'PUT'
+      }
+    )
+    if (status.value === 'error') {
+      snackbarStore.fireSnack({
+        isVisible: true,
+        text: 'Something went wrong',
+        type: 'error'
+      })
+      return
+    }
+    snackbarStore.fireSnack({
+      isVisible: true,
+      text: `Question has been ${question.starred ? 'unstarred' : 'starred'} successfully`,
+      type: 'success'
+    })
+    questions.value.map(item => {
+      if (item.uuid === question.uuid) {
+        item.starred = !item.starred
+      }
+    })
+  } catch (error) {
+    snackbarStore.fireSnack({
+      isVisible: true,
+      text: 'Failed, try again later',
+      type: 'error'
+    })
+  } finally {
+    sratedQuestionUuid.value = ''
+  }
 }
 
 const questionDateDistance = (dateCreated: string) => {

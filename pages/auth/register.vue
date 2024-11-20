@@ -164,7 +164,7 @@ const form = ref<Form>({
       type: 'email',
       placeholder: 'Enter your Email',
       label: 'Email',
-      name: 'Email',
+      name: 'name',
       'prefix-icon': 'emailIcon',
       classes:
         'w-full border-[#D4D5DC] border-[0.063rem] outline-0 text-[0.875rem] md:text-[1rem] text-[#000] rounded-full block h-[3rem] md:h-[3.5rem] pl-10 p-2.5 dark:placeholder-[#AAACB9]',

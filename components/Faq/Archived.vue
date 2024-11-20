@@ -9,6 +9,7 @@
         <FaqUserCard
           v-for="item in questions"
           :key="item.uuid"
+          :question="item"
           :qa-title="item.question"
           :date="questionDateDistance(item.dateCreated)"
           :answer="item.paragraph"
@@ -63,12 +64,13 @@ interface questionItem {
   paragraph?: 'string'
   points?: ['string']
   userFullName?: string
+  starred?: boolean
 }
 
 const getUserQuestions = async () => {
   try {
     const { data, status } = await useAPI<ApiQuestionResponse>(
-      `/faqs/my/users/false`,
+      `/faqs/my/users/true`,
       {
         method: 'GET'
       }
@@ -140,7 +142,7 @@ const unArchiveQuestion = async (uuid: string) => {
     }
     snackbarStore.fireSnack({
       isVisible: true,
-      text: 'Question has been archived successfully',
+      text: 'Question has been unArchived successfully',
       type: 'success'
     })
     questions.value = questions.value.filter(item => item.uuid !== uuid)
