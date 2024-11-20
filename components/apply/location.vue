@@ -199,19 +199,18 @@ const updateLocationInfo = async () => {
       const { addressCompleted, profileCompleted, profileCompletedAt } =
         userData
 
-      if (userData) {
+      if (userData && route.name === 'vendor-form-location___en') {
         userStore.UpdateUserData({
           addressCompleted,
           profileCompleted,
           profileCompletedAt
         })
-        if (
-          userData?.applicationStatus &&
-          userData?.applicationStatus === 'Approved'
-        ) {
-          navigateTo({ name: 'vendor-home-main-dashboard___en' })
-        } else if (route.name === 'vendor-form-location___en')
-          navigateTo({ name: 'vendor-form-photos___en' })
+        navigateTo({
+          name:
+            userData?.applicationStatus === 'Approved'
+              ? 'vendor-home-main-dashboard___en'
+              : 'vendor-form-photos___en'
+        })
       }
     }
     snackbarStore.fireSnack({

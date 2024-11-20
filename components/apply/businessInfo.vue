@@ -102,7 +102,7 @@
             <button
               type="submit"
               :disabled="saveBtnLoading"
-              class="rounded-[2rem] bg-[#FF3D9A] w-[11.25rem] border-[0.063rem] border-[#FF3D9A] h-[3.5rem] cursor-pointer"
+              class="rounded-[2rem] bg-[#FF3D9A] w-[11.25rem] border-[0.063rem] border-[#FF3D9A] h-[3.5rem] cursor-pointer disabled:border-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[#AAACB9]"
             >
               <p
                 v-if="!saveBtnLoading"
@@ -344,15 +344,14 @@ const updateBusinessInfo = async () => {
     if (data && data.value) {
       const { data: userData } = data.value
 
-      if (userData) {
+      if (userData && route.name === 'vendor-form-business-information___en') {
         userStore.UpdateUserData(userData)
-        if (
-          userData?.applicationStatus &&
-          userData?.applicationStatus === 'Approved'
-        ) {
-          navigateTo({ name: 'vendor-home-main-dashboard___en' })
-        } else if (route.name === 'vendor-form-business-information___en')
-          navigateTo({ name: 'vendor-form-location___en' })
+        navigateTo({
+          name:
+            userData?.applicationStatus === 'Approved'
+              ? 'vendor-home-main-dashboard___en'
+              : 'vendor-form-location___en'
+        })
       }
     }
     snackbarStore.fireSnack({

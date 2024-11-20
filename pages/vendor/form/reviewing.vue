@@ -23,7 +23,7 @@
           :key="item"
           class="text-[#2A2F4F] text-[1.25rem] leading-9 font-semibold p-[1.375rem] bg-[#fff] rounded-[1rem]"
         >
-          {{ item }}
+          {{ `${item.length < 4 ? '0' : ''}${item}` }}
         </p>
       </div>
     </div>
@@ -91,26 +91,17 @@ let intervalId: string | number | NodeJS.Timeout | null | undefined = null
 const updateTimeLeft = () => {
   const now = new Date()
   const daysBetween = differenceInDays(
-    add(profileCompletedAt.toLocaleString(), { days: 4 }),
+    add(profileCompletedAt, { days: 4 }),
     now
   )
 
   const hoursBetween =
-    differenceInHours(
-      add(profileCompletedAt.toLocaleString(), { days: 4 }),
-      now
-    ) % 24
+    differenceInHours(add(profileCompletedAt, { days: 4 }), now) % 24
 
   const minutsBetween =
-    differenceInMinutes(
-      add(profileCompletedAt.toLocaleString(), { days: 4 }),
-      now
-    ) % 60
+    differenceInMinutes(add(profileCompletedAt, { days: 4 }), now) % 60
   const secondsBetween =
-    differenceInSeconds(
-      add(profileCompletedAt.toLocaleString(), { days: 4 }),
-      now
-    ) % 60
+    differenceInSeconds(add(profileCompletedAt, { days: 4 }), now) % 60
 
   if (!secondsBetween && !minutsBetween && !hoursBetween && !daysBetween) {
     timeLeft.value = {
